@@ -49,85 +49,119 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGamePadDetect)
         {
-            if (Input.GetKeyDown(KeyCode.W) || Gamepad.current.dpad.up.wasPressedThisFrame && !isLockD)
-            {
-                currentPos += Vector3.up;
-            }
-            else if (Input.GetKeyDown(KeyCode.S) || Gamepad.current.dpad.down.wasPressedThisFrame && !isLockU)
-            {
-                currentPos += Vector3.down;
-
-            }
-            else if (Input.GetKeyDown(KeyCode.A) || Gamepad.current.dpad.left.wasPressedThisFrame && !isLockL)
-            {
-                currentPos += Vector3.left;
-                playerSprite.transform.localScale = new Vector3(-1, 1, 0);
-            }
-            else if (Input.GetKeyDown(KeyCode.D) || Gamepad.current.dpad.right.wasPressedThisFrame && isLockR)
-            {
-                currentPos += Vector3.right;
-                playerSprite.transform.localScale = new Vector3(1, 1, 0);
-            }
-            transform.position = currentPos;
+            InputGamePadAndKeyborad();
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.W) && !isLockU)
-            {
-                currentPos += Vector3.up;
-                isLockD = true;
-                isLockL = false;
-                isLockR = false;
-                isLockU = false;
-                UpdateColorArrow(1);
-                transform.position = currentPos;
-                UpdatePostionHeroTeam();
-                // UpdatePostionHeroTeam();
-            }
-            else if (Input.GetKeyDown(KeyCode.S) && !isLockD)
-            {
-                currentPos += Vector3.down;
-                isLockU = true;
-                isLockL = false;
-                isLockR = false;
-                isLockD = false;
-                UpdateColorArrow(0);
-                //UpdatePostionHeroTeam();
-                transform.position = currentPos;
-                UpdatePostionHeroTeam();
-            }
-            else if (Input.GetKeyDown(KeyCode.A) && !isLockL)
-            {
-                currentPos += Vector3.left;
-                //playerSprite.transform.localScale = new Vector3(-1, 1, 0);
-                playerSprite.flipX = true;
-
-                isLockR = true;
-                isLockD = false;
-                isLockU = false;
-                isLockL = false;
-                UpdateColorArrow(2);
-                // UpdatePostionHeroTeam();
-                transform.position = currentPos;
-                UpdatePostionHeroTeam();
-
-            }
-            else if (Input.GetKeyDown(KeyCode.D) && !isLockR)
-            {
-                currentPos += Vector3.right;
-                // playerSprite.transform.localScale = new Vector3(1, 1, 0);
-                playerSprite.flipX = false;
-                isLockL = true;
-                isLockR = false;
-                isLockU = false;
-                isLockD = false;
-                UpdateColorArrow(3);
-                transform.position = currentPos;
-                UpdatePostionHeroTeam();
-
-            }
-        
+            InputOnlyKeyboard();
         }
+    }
+
+    private void InputGamePadAndKeyborad()
+    {
+        if ((Input.GetKeyDown(KeyCode.W) || Gamepad.current.dpad.up.wasPressedThisFrame) && !isLockU)
+        {
+            currentPos += Vector3.up;
+            isLockD = true;
+            isLockL = false;
+            isLockR = false;
+            isLockU = false;
+            UpdateColorArrow(1);
+            transform.position = currentPos;
+            UpdatePostionHeroTeam();
+
+        }
+        else if ((Input.GetKeyDown(KeyCode.S) || Gamepad.current.dpad.down.wasPressedThisFrame) && !isLockD)
+        {
+            currentPos += Vector3.down;
+            isLockU = true;
+            isLockL = false;
+            isLockR = false;
+            isLockD = false;
+            UpdateColorArrow(0);
+            transform.position = currentPos;
+            UpdatePostionHeroTeam();
+        }
+        else if ((Input.GetKeyDown(KeyCode.A) || Gamepad.current.dpad.left.wasPressedThisFrame) && !isLockL)
+        {
+            currentPos += Vector3.left;
+            playerSprite.flipX = true;
+            isLockR = true;
+            isLockD = false;
+            isLockU = false;
+            isLockL = false;
+            UpdateColorArrow(2);
+            transform.position = currentPos;
+            UpdatePostionHeroTeam();
+
+        }
+        else if ((Input.GetKeyDown(KeyCode.D) || Gamepad.current.dpad.right.wasPressedThisFrame) && !isLockR)
+        {
+            currentPos += Vector3.right;
+            playerSprite.flipX = false;
+            isLockL = true;
+            isLockR = false;
+            isLockU = false;
+            isLockD = false;
+            UpdateColorArrow(3);
+            transform.position = currentPos;
+            UpdatePostionHeroTeam();
+
+        }
+    }
+
+    private void InputOnlyKeyboard()
+    {
+        if (Input.GetKeyDown(KeyCode.W) && !isLockU)
+        {
+            currentPos += Vector3.up;
+            isLockD = true;
+            isLockL = false;
+            isLockR = false;
+            isLockU = false;
+            UpdateColorArrow(1);
+            transform.position = currentPos;
+            UpdatePostionHeroTeam();
+
+        }
+        else if (Input.GetKeyDown(KeyCode.S) && !isLockD)
+        {
+            currentPos += Vector3.down;
+            isLockU = true;
+            isLockL = false;
+            isLockR = false;
+            isLockD = false;
+            UpdateColorArrow(0);
+            transform.position = currentPos;
+            UpdatePostionHeroTeam();
+        }
+        else if (Input.GetKeyDown(KeyCode.A) && !isLockL)
+        {
+            currentPos += Vector3.left;
+            playerSprite.flipX = true;
+            isLockR = true;
+            isLockD = false;
+            isLockU = false;
+            isLockL = false;
+            UpdateColorArrow(2);
+            transform.position = currentPos;
+            UpdatePostionHeroTeam();
+
+        }
+        else if (Input.GetKeyDown(KeyCode.D) && !isLockR)
+        {
+            currentPos += Vector3.right;
+            playerSprite.flipX = false;
+            isLockL = true;
+            isLockR = false;
+            isLockU = false;
+            isLockD = false;
+            UpdateColorArrow(3);
+            transform.position = currentPos;
+            UpdatePostionHeroTeam();
+
+        }
+
     }
 
     private void UpdateColorArrow(int indexDisable)
