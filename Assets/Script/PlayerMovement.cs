@@ -150,6 +150,10 @@ public class PlayerMovement : MonoBehaviour
         }
         heroPosition[0] = heroMain.transform.position;
 
+        for (int i = 0; i < heroPosition.Count; i++)
+        {
+            heroPosition[i] = heroChildTran[i].position;
+        }
     }
  
     private void OnTriggerEnter2D(Collider2D collision)
