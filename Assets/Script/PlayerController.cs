@@ -5,11 +5,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public int health = 2, attack = 1;
-    public int level = 1;
-    public float exp;
-    public GameMananger gameMananger;
-    public PlayerManager playerManager;
+    public Unit playerProfile;
+    private GameMananger gameMananger;
+    private PlayerManager playerManager;
 
 
     // Start is called before the first frame update
@@ -95,7 +93,7 @@ public class PlayerController : MonoBehaviour
             {
                 SetBoolForSwitch(false, true, true);
                 StartCoroutine(ChangePositionInTeam_L_To_F());
-                Debug.Log("ChangePositionInTeam_PressQ");
+                Debug.Log("SwtichL_S");
             }
         }
         else if (gameMananger.canPress)
@@ -104,7 +102,7 @@ public class PlayerController : MonoBehaviour
             {
                 SetBoolForSwitch(false, true, true);
                 StartCoroutine(ChangePositionInTeam_L_To_F());
-                Debug.Log("ChangePositionInTeam_PressQ");
+                Debug.Log("SwtichL_S");
 
             }
         }
@@ -123,7 +121,7 @@ public class PlayerController : MonoBehaviour
                 int add = i + 1;
                 playerManager.heroList[i].position = originPos[add];
                 playerManager.heroList[i].SetSiblingIndex(add);
-                Debug.Log(i);
+               // Debug.Log(i);
             }
             else
             {

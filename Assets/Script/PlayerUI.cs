@@ -21,7 +21,7 @@ public class PlayerUI : MonoBehaviour
 
     private void DisplayText()
     {
-        healthText.text = playerController.health.ToString();
-        attackText.text = playerController.attack.ToString();
+        healthText.text = playerController.playerProfile.health.ToString();
+        attackText.text = playerController.playerProfile.attack.ToString();
     }
 }
