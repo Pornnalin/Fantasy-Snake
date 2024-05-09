@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 currentPos;   
     [SerializeField] private bool isLockU, isLockD, isLockR, isLockL;  
     [Space]
-    [SerializeField] private SpriteRenderer playerSprite;
+  //  [SerializeField] private SpriteRenderer playerSprite;
     [SerializeField] private SpriteRenderer[] collidersHit;
     [SerializeField] private SpriteRenderer[] arrow;
     [SerializeField] private Color colorEnable, colorDisable;
@@ -76,7 +76,8 @@ public class PlayerMovement : MonoBehaviour
         else if ((Input.GetKeyDown(KeyCode.A) || Gamepad.current.dpad.left.wasPressedThisFrame) && !isLockL)
         {
             currentPos += Vector3.left;
-            playerSprite.flipX = true;
+            //playerSprite.flipX = true;
+            playerManager.FlipXAllHero(true); 
             isLockR = true;
             isLockD = false;
             isLockU = false;
@@ -89,7 +90,8 @@ public class PlayerMovement : MonoBehaviour
         else if ((Input.GetKeyDown(KeyCode.D) || Gamepad.current.dpad.right.wasPressedThisFrame) && !isLockR)
         {
             currentPos += Vector3.right;
-            playerSprite.flipX = false;
+            playerManager.FlipXAllHero(false); 
+            //playerSprite.flipX = false;
             isLockL = true;
             isLockR = false;
             isLockU = false;
@@ -129,7 +131,9 @@ public class PlayerMovement : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.A) && !isLockL)
         {
             currentPos += Vector3.left;
-            playerSprite.flipX = true;
+            //playerSprite.flipX = true;
+            playerManager.FlipXAllHero(true);
+
             isLockR = true;
             isLockD = false;
             isLockU = false;
@@ -142,7 +146,8 @@ public class PlayerMovement : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D) && !isLockR)
         {
             currentPos += Vector3.right;
-            playerSprite.flipX = false;
+            //playerSprite.flipX = false;
+            playerManager.FlipXAllHero(false);
             isLockL = true;
             isLockR = false;
             isLockU = false;
@@ -162,14 +167,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
   
- 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Monster"))
-        {
-            Debug.Log("hit it!!");
-        }
-    }
+
 
 }
 

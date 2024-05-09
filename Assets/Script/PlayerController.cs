@@ -8,13 +8,17 @@ public class PlayerController : MonoBehaviour
     public Unit playerProfile;
     private GameMananger gameMananger;
     private PlayerManager playerManager;
-
-
+    private BattleSystems battleSystems;
+    private int setNumber = 0;
+    private bool isSetNumber = false;
+    private UIController uIController;
     // Start is called before the first frame update
     void Start()
     {
         gameMananger = FindAnyObjectByType<GameMananger>();
         playerManager = FindAnyObjectByType<PlayerManager>();
+        battleSystems = FindAnyObjectByType<BattleSystems>();
+        uIController = FindAnyObjectByType<UIController>();
 
     }
 
@@ -23,6 +27,44 @@ public class PlayerController : MonoBehaviour
     {
         SwitchFirstToSecond();
         SwitchLastToFirst();
+
+        switch (battleSystems.state)
+        {
+            case BattleSystems.battleStage.START:
+                break;
+            case BattleSystems.battleStage.RANDOM:
+                if (!isSetNumber && uIController.oddOrEvenHead.activeSelf)
+                {
+                    if (Input.GetKeyDown(KeyCode.J))
+                    {
+                        setNumber = 2;                        
+                        isSetNumber = true;                     
+                        StartCoroutine(wait());
+
+                    }
+                    else if (Input.GetKeyDown(KeyCode.K))
+                    {
+                        setNumber = 1;                      
+                        isSetNumber = true;
+                        StartCoroutine(wait());
+
+
+                    }
+                    else
+                    {
+                        Debug.Log("not right input!!!");
+                    }
+                }
+                break;
+            case BattleSystems.battleStage.PLAYERTURN:
+                break;
+            case BattleSystems.battleStage.MONSTERTURN:
+                break;
+            case BattleSystems.battleStage.WON:
+                break;
+            case BattleSystems.battleStage.LOST:
+                break;
+        }
     }
     #region SwitchFirstToSecond
     public void SwitchFirstToSecond()
@@ -74,7 +116,7 @@ public class PlayerController : MonoBehaviour
         }
 
         playerManager.ResetListAndAddNew();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         SetBoolForSwitch(true, false, false);
     }
     #endregion
@@ -115,13 +157,13 @@ public class PlayerController : MonoBehaviour
         int lastIndex = originPos.Count - 1;
 
         for (int i = 0; i < originPos.Count; i++)
-        {            
+        {
             if (i < lastIndex)
             {
                 int add = i + 1;
                 playerManager.heroList[i].position = originPos[add];
                 playerManager.heroList[i].SetSiblingIndex(add);
-               // Debug.Log(i);
+                // Debug.Log(i);
             }
             else
             {
@@ -131,7 +173,7 @@ public class PlayerController : MonoBehaviour
         }
 
         playerManager.ResetListAndAddNew();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         SetBoolForSwitch(true, false, false);
     }
     #endregion
@@ -143,4 +185,53 @@ public class PlayerController : MonoBehaviour
         gameMananger.isSwtichL_To_F = isSwtichF_To_S;
     }
 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Monster"))
+        {
+            Debug.Log("hit");
+
+            battleSystems.state = BattleSystems.battleStage.RANDOM;
+            uIController.oddOrEvenHead.SetActive(true);           
+        }
+    }
+
+    IEnumerator wait()
+    {
+        battleSystems.RandomNumber();
+        uIController.numberText.text = battleSystems.rand.ToString();
+        uIController.result.SetActive(true);
+        uIController.uiOddEven.SetActive(false);      
+
+        //uIController.oddOrEvenHead.SetActive(false);
+        //Debug.Log("CloseUI");
+        if (setNumber.Equals(2) && battleSystems.isEven)
+        {
+            uIController.tellPlayer.text = "Just lucky...";
+
+            // battleSystems.state = BattleSystems.battleStage.PLAYERTURN;
+        }
+        else if (setNumber.Equals(2) && !battleSystems.isEven)
+        {
+            uIController.tellPlayer.text = "Too badd!!";
+            //battleSystems.state = BattleSystems.battleStage.MONSTERTURN;
+        }
+        else if (setNumber.Equals(1) && battleSystems.isEven)
+        {
+            uIController.tellPlayer.text = "Too badd!!";
+            // battleSystems.state = BattleSystems.battleStage.MONSTERTURN;
+        }
+        else
+        {
+            uIController.tellPlayer.text = "Just lucky...";
+            //battleSystems.state = BattleSystems.battleStage.PLAYERTURN;
+        }
+        yield return new WaitForSeconds(3f);
+        // Debug.Log("ChangeState");
+    }
+
+
+
 }
+

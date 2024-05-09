@@ -7,15 +7,30 @@ public class PlayerManager : MonoBehaviour
     [Space]
     public List<Vector2> heroPosition = new List<Vector2>();
     public List<Transform> heroList = new List<Transform>();
+    public List<SpriteRenderer> heroSprite = new List<SpriteRenderer>();
     [Space]
     public int amountKilled;
-
+    private SpriteRenderer heroFirst;
     // Start is called before the first frame update
     void Start()
     {
         GetData();
 
     }
+    private void Update()
+    {
+      //  FlipXAllHero();
+
+    }
+
+    public void FlipXAllHero(bool isFlipX)
+    {
+        for (int i = 0; i < heroPosition.Count; i++)
+        {
+            heroSprite[i].flipX = isFlipX;
+        }
+    }
+
     private void GetData()
     {
         int childLength = this.transform.childCount;
@@ -23,9 +38,11 @@ public class PlayerManager : MonoBehaviour
         {
             heroPosition.Add(transform.GetChild(i).transform.position);
             heroList.Add(transform.GetChild(i));
+            heroSprite.Add(transform.GetChild(i).GetComponent<SpriteRenderer>());
             ScriptTurnONOFF(i);
 
         }
+        heroFirst = heroList[0].GetComponent<SpriteRenderer>();
     }
     public void UpdatePostionTeamWhenMove()
     {
@@ -75,9 +92,10 @@ public class PlayerManager : MonoBehaviour
     {
         heroList = new List<Transform>();
         heroPosition = new List<Vector2>();
+        heroSprite = new List<SpriteRenderer>();
         GetData();
 
     }
 
-   
+  
 }
