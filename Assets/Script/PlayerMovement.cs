@@ -5,49 +5,36 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private PlayerInput playerInput;
     private Vector2 moveInput;
     private Rigidbody2D rigi;
-    private Vector3 currentPos;
-    [SerializeField] private bool isGamePadDetect;
-    [SerializeField] private bool isLockU, isLockD, isLockR, isLockL;
+    private Vector3 currentPos;   
+    [SerializeField] private bool isLockU, isLockD, isLockR, isLockL;  
     [Space]
     [SerializeField] private SpriteRenderer playerSprite;
     [SerializeField] private SpriteRenderer[] collidersHit;
     [SerializeField] private SpriteRenderer[] arrow;
     [SerializeField] private Color colorEnable, colorDisable;
-    [Space]
-    [SerializeField] private GameObject heroMain;
-    [SerializeField] private GameObject heroChild;
-    [SerializeField]private List<Vector2> heroPosition = new List<Vector2>();
-    [SerializeField]private List<Transform> heroChildTran = new List<Transform>();
-
-    // private InputActionAsset inputActionAsset;
+    [SerializeField] private PlayerManager playerManager;
+    private GameMananger gameMananger;
 
     // Start is called before the first frame update
     void Start()
     {
         //   playerInput = GetComponent<PlayerInput>();
         rigi = GetComponent<Rigidbody2D>();
+        playerManager = transform.root.GetComponent<PlayerManager>();
+        gameMananger = FindAnyObjectByType<GameMananger>();
         currentPos = transform.position;
-        heroPosition.Add(heroMain.transform.position);
-        heroChildTran.Add(heroMain.transform);
-        int childLength = heroChild.transform.childCount;
-        for (int i = 0; i < childLength; i++)
-        {
-            heroPosition.Add(heroChild.transform.GetChild(i).transform.position);
-            heroChildTran.Add(heroChild.transform.GetChild(i));
-        }
+       
     }
 
     // Update is called once per frame
     void Update()
     {
         // moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
-        // Debug.Log(Gamepad.current);
-        isGamePadDetect = Gamepad.current == null ? false : true;
+        // Debug.Log(Gamepad.current);        
 
-        if (isGamePadDetect)
+        if (gameMananger.isGamePadDetect)
         {
             InputGamePadAndKeyborad();
         }
@@ -55,6 +42,10 @@ public class PlayerMovement : MonoBehaviour
         {
             InputOnlyKeyboard();
         }
+    }
+    private void LateUpdate()
+    {
+       // playerManager.UpdateNewPositionTeam();
     }
 
     private void InputGamePadAndKeyborad()
@@ -68,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
             isLockU = false;
             UpdateColorArrow(1);
             transform.position = currentPos;
-            UpdatePostionHeroTeam();
+            playerManager.UpdatePostionTeamWhenMove();
 
         }
         else if ((Input.GetKeyDown(KeyCode.S) || Gamepad.current.dpad.down.wasPressedThisFrame) && !isLockD)
@@ -80,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
             isLockD = false;
             UpdateColorArrow(0);
             transform.position = currentPos;
-            UpdatePostionHeroTeam();
+            playerManager.UpdatePostionTeamWhenMove();
         }
         else if ((Input.GetKeyDown(KeyCode.A) || Gamepad.current.dpad.left.wasPressedThisFrame) && !isLockL)
         {
@@ -92,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
             isLockL = false;
             UpdateColorArrow(2);
             transform.position = currentPos;
-            UpdatePostionHeroTeam();
+            playerManager.UpdatePostionTeamWhenMove();
 
         }
         else if ((Input.GetKeyDown(KeyCode.D) || Gamepad.current.dpad.right.wasPressedThisFrame) && !isLockR)
@@ -105,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
             isLockD = false;
             UpdateColorArrow(3);
             transform.position = currentPos;
-            UpdatePostionHeroTeam();
+            playerManager.UpdatePostionTeamWhenMove();
 
         }
     }
@@ -121,7 +112,7 @@ public class PlayerMovement : MonoBehaviour
             isLockU = false;
             UpdateColorArrow(1);
             transform.position = currentPos;
-            UpdatePostionHeroTeam();
+            playerManager.UpdatePostionTeamWhenMove();
 
         }
         else if (Input.GetKeyDown(KeyCode.S) && !isLockD)
@@ -133,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
             isLockD = false;
             UpdateColorArrow(0);
             transform.position = currentPos;
-            UpdatePostionHeroTeam();
+            playerManager.UpdatePostionTeamWhenMove();
         }
         else if (Input.GetKeyDown(KeyCode.A) && !isLockL)
         {
@@ -145,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
             isLockL = false;
             UpdateColorArrow(2);
             transform.position = currentPos;
-            UpdatePostionHeroTeam();
+            playerManager.UpdatePostionTeamWhenMove();
 
         }
         else if (Input.GetKeyDown(KeyCode.D) && !isLockR)
@@ -158,8 +149,7 @@ public class PlayerMovement : MonoBehaviour
             isLockD = false;
             UpdateColorArrow(3);
             transform.position = currentPos;
-            UpdatePostionHeroTeam();
-
+            playerManager.UpdatePostionTeamWhenMove();
         }
 
     }
@@ -171,24 +161,7 @@ public class PlayerMovement : MonoBehaviour
             arrow[i].color = i == indexDisable ? colorDisable : colorEnable;
         }
     }
-    void UpdatePostionHeroTeam()
-    {
-        int childLength = heroChild.transform.childCount;
-        for (int i = 0; i < childLength; i++)
-        {
-            //  Debug.Log(i);
-            int crossHero = i + 1;
-            heroChildTran[crossHero].transform.position = heroPosition[i];
-           // Debug.Log(heroPosition[i]);
-            // Debug.Log(heroChild.transform.GetChild(i).transform);
-        }
-        heroPosition[0] = heroMain.transform.position;
-
-        for (int i = 0; i < heroPosition.Count; i++)
-        {
-            heroPosition[i] = heroChildTran[i].position;
-        }
-    }
+  
  
     private void OnTriggerEnter2D(Collider2D collision)
     {
