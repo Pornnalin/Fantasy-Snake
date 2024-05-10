@@ -16,6 +16,7 @@ public class BattleSystems : MonoBehaviour
     public MonsterController monsterControl;
     public PlayerController playerControl;
     public PlayerManager playerManager;
+    public GameMananger gameMananger;
 
     // Start is called before the first frame update
     void Start()
@@ -90,17 +91,17 @@ public class BattleSystems : MonoBehaviour
         if (playerControl.setNumber.Equals(rand))
         {
             ModiflyTextAndSetBool(descriptionLucky, true);
-         //   Debug.Log("Lucky" + playerControl.setNumber + isEven);
+            //   Debug.Log("Lucky" + playerControl.setNumber + isEven);
 
         }
         else
         {
-           // Debug.Log("bad" + playerControl.setNumber + isEven);
+            // Debug.Log("bad" + playerControl.setNumber + isEven);
             ModiflyTextAndSetBool(descriptionBad, false);
 
         }
-      
-      
+
+
         yield return new WaitForSeconds(2.5f);
         displayUI.oddOrEvenHead.SetActive(false);
         isRand = false;
@@ -108,7 +109,6 @@ public class BattleSystems : MonoBehaviour
         state = playerControl.isMyTurn ? battleStage.PLAYERTURN : battleStage.MONSTERTURN;
         displayUI.playerBattleUI.SetActive(true);
         displayUI.monsBattleUI.SetActive(true);
-
         Debug.Log("CurrentState" + state);
 
     }
@@ -143,6 +143,8 @@ public class BattleSystems : MonoBehaviour
             else
             {
                 state = battleStage.WON;
+                playerManager.amountKilled += 1;
+                playerControl.playerProfile.exp += 0.5f;
             }
             playerControl.isEndAttack = false;
         }
@@ -171,7 +173,7 @@ public class BattleSystems : MonoBehaviour
             else
             {
                 state = battleStage.LOST;
-
+                monsterControl.monsterProflie.exp += 1f * gameMananger.statInfo.growing;
             }
             isMonsAttack = false;
         }

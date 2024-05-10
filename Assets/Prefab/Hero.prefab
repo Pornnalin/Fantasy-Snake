@@ -1267,8 +1267,6 @@ MonoBehaviour:
   playerProfile:
     health: 0
     attack: 0
-    level: 0
-    currentHealth: 0
     exp: 0
   setNumber: 0
   isSetNumber: 0

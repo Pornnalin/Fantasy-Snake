@@ -38,11 +38,13 @@ public class PlayerMovement : MonoBehaviour
                 if (gameMananger.isGamePadDetect)
                 {
                     InputGamePadAndKeyborad();
+                    //Check();
                 }
                 else
                 {
                     InputOnlyKeyboard();
                 }
+                    CheckPlayerMove();
                 break;
             case PlayerManager.playerStage.BATTLE:
                 break;
@@ -115,6 +117,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) && !isLockU)
         {
             currentPos += Vector3.up;
+           // transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
             isLockD = true;
             isLockL = false;
             isLockR = false;
@@ -127,6 +130,7 @@ public class PlayerMovement : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.S) && !isLockD)
         {
             currentPos += Vector3.down;
+          //  transform.rotation = Quaternion.Euler(new Vector3(0, 0, -180f));
             isLockU = true;
             isLockL = false;
             isLockR = false;
@@ -138,6 +142,7 @@ public class PlayerMovement : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.A) && !isLockL)
         {
             currentPos += Vector3.left;
+           // transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90f));
             //playerSprite.flipX = true;
             playerManager.FlipXAllHero(true);
 
@@ -173,5 +178,17 @@ public class PlayerMovement : MonoBehaviour
             arrow[i].color = i == indexDisable ? colorDisable : colorEnable;
         }
     }
-
+    public void CheckPlayerMove()
+    {
+        for (int i = 0; i < playerManager.heroList.Count; i++)
+        {
+            if (i != 0)
+            {
+                if (playerManager.heroList[0].transform.position == playerManager.heroList[i].transform.position)
+                {
+                    playerManager.currentPlayerStage = PlayerManager.playerStage.DIE;
+                }
+            }
+        }
+    }
 }
