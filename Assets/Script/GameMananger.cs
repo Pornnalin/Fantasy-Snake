@@ -5,12 +5,7 @@ using UnityEngine.InputSystem;
 
 public class GameMananger : MonoBehaviour
 {
-    [Range(1, 15)]
-    public int minAttack, maxAttack;
-    [Range(1, 10)]
-    public int minHeart, maxHeart;
-    public float growing;
-    public float chancePlayer, chanceMonster;
+    public StatInfo statInfo;
     [Header("GamePad")]
     public bool isGamePadDetect;
     [Space]
@@ -31,4 +26,18 @@ public class GameMananger : MonoBehaviour
         isGamePadDetect = Gamepad.current == null ? false : true;
 
     }
+}
+[System.Serializable]
+public class StatInfo
+{
+    [Space]
+    [Range(1, 25), Tooltip("min =1,max=25")]
+    public int minPlayerAttack, maxPlayerAttack, minMonsterAttack, maxMonsterrAttack;
+    [Space]
+    [Range(1, 10), Tooltip("min =1,max=10")]
+    public int minPlayerHeart, maxPlayerHeart, minMonsterHeart, maxMonsterHeart;
+    [Space]
+    public float growing;
+    [Space]
+    public float chancePlayer, chanceMonster;
 }

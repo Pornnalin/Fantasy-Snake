@@ -7,10 +7,9 @@ public class PlayerMovement : MonoBehaviour
 {
     private Vector2 moveInput;
     private Rigidbody2D rigi;
-    private Vector3 currentPos;   
-    [SerializeField] private bool isLockU, isLockD, isLockR, isLockL;  
+    private Vector3 currentPos;
+    [SerializeField] private bool isLockU, isLockD, isLockR, isLockL;
     [Space]
-  //  [SerializeField] private SpriteRenderer playerSprite;
     [SerializeField] private SpriteRenderer[] collidersHit;
     [SerializeField] private SpriteRenderer[] arrow;
     [SerializeField] private Color colorEnable, colorDisable;
@@ -25,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
         playerManager = transform.root.GetComponent<PlayerManager>();
         gameMananger = FindAnyObjectByType<GameMananger>();
         currentPos = transform.position;
-       
+
     }
 
     // Update is called once per frame
@@ -33,19 +32,27 @@ public class PlayerMovement : MonoBehaviour
     {
         // moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
         // Debug.Log(Gamepad.current);        
-
-        if (gameMananger.isGamePadDetect)
+        switch (playerManager.currentPlayerStage)
         {
-            InputGamePadAndKeyborad();
-        }
-        else
-        {
-            InputOnlyKeyboard();
+            case PlayerManager.playerStage.MOVE:
+                if (gameMananger.isGamePadDetect)
+                {
+                    InputGamePadAndKeyborad();
+                }
+                else
+                {
+                    InputOnlyKeyboard();
+                }
+                break;
+            case PlayerManager.playerStage.BATTLE:
+                break;
+            case PlayerManager.playerStage.DIE:
+                break;
         }
     }
     private void LateUpdate()
     {
-       // playerManager.UpdateNewPositionTeam();
+        // playerManager.UpdateNewPositionTeam();
     }
 
     private void InputGamePadAndKeyborad()
@@ -77,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
         {
             currentPos += Vector3.left;
             //playerSprite.flipX = true;
-            playerManager.FlipXAllHero(true); 
+            playerManager.FlipXAllHero(true);
             isLockR = true;
             isLockD = false;
             isLockU = false;
@@ -90,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
         else if ((Input.GetKeyDown(KeyCode.D) || Gamepad.current.dpad.right.wasPressedThisFrame) && !isLockR)
         {
             currentPos += Vector3.right;
-            playerManager.FlipXAllHero(false); 
+            playerManager.FlipXAllHero(false);
             //playerSprite.flipX = false;
             isLockL = true;
             isLockR = false;
@@ -162,12 +169,9 @@ public class PlayerMovement : MonoBehaviour
     private void UpdateColorArrow(int indexDisable)
     {
         for (int i = 0; i < arrow.Length; i++)
-        {            
+        {
             arrow[i].color = i == indexDisable ? colorDisable : colorEnable;
         }
     }
-  
-
 
 }
-

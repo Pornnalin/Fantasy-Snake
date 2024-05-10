@@ -7,10 +7,14 @@ public class PlayerUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI healthText, attackText;
     [SerializeField] private PlayerController playerController;
+    public GameObject statGroup;
+     public GameObject arrowGroup;
     // Start is called before the first frame update
     void Start()
     {
         playerController = GetComponent<PlayerController>();
+        statGroup.SetActive(false);
+        arrowGroup.SetActive(false);
     }
 
     // Update is called once per frame

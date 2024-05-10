@@ -9,56 +9,58 @@ public class PlayerController : MonoBehaviour
     private GameMananger gameMananger;
     private PlayerManager playerManager;
     private BattleSystems battleSystems;
-    private int setNumber = 0;
-    private bool isSetNumber = false;
-    private UIController uIController;
+    public int setNumber = 0;
+    public bool isSetNumber = false;
+    public bool isMyTurn;
+    public bool isEndAttack;
+    private DisplayUI displayUI;
+    private PlayerUI playerUI;
     // Start is called before the first frame update
     void Start()
     {
         gameMananger = FindAnyObjectByType<GameMananger>();
         playerManager = FindAnyObjectByType<PlayerManager>();
         battleSystems = FindAnyObjectByType<BattleSystems>();
-        uIController = FindAnyObjectByType<UIController>();
+        displayUI = FindAnyObjectByType<DisplayUI>();
+        playerUI = FindAnyObjectByType<PlayerUI>();
 
+        playerProfile.attack = gameMananger.statInfo.minPlayerAttack;
+        playerProfile.health = gameMananger.statInfo.minPlayerHeart;
+
+        
+        Debug.Log("SetDefault_Player" + name);
     }
 
     // Update is called once per frame
     void Update()
     {
-        SwitchFirstToSecond();
-        SwitchLastToFirst();
+        switch (playerManager.currentPlayerStage)
+        {
+            case PlayerManager.playerStage.MOVE:
+                SwitchFirstToSecond();
+                SwitchLastToFirst();
+                break;
+        }
+      
 
         switch (battleSystems.state)
         {
-            case BattleSystems.battleStage.START:
+            case BattleSystems.battleStage.NONE:
                 break;
             case BattleSystems.battleStage.RANDOM:
-                if (!isSetNumber && uIController.oddOrEvenHead.activeSelf)
+
+                if (!isSetNumber && displayUI.oddOrEvenHead.activeSelf)
                 {
-                    if (Input.GetKeyDown(KeyCode.J))
-                    {
-                        setNumber = 2;                        
-                        isSetNumber = true;                     
-                        StartCoroutine(wait());
-
-                    }
-                    else if (Input.GetKeyDown(KeyCode.K))
-                    {
-                        setNumber = 1;                      
-                        isSetNumber = true;
-                        StartCoroutine(wait());
-
-
-                    }
-                    else
-                    {
-                        Debug.Log("not right input!!!");
-                    }
+                    InputRandom();
                 }
                 break;
             case BattleSystems.battleStage.PLAYERTURN:
+                playerManager.ManageStatUI();
+                InputAttack();
                 break;
             case BattleSystems.battleStage.MONSTERTURN:
+                playerManager.ManageStatUI();
+
                 break;
             case BattleSystems.battleStage.WON:
                 break;
@@ -66,6 +68,55 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+    #region InputRandom
+    private void InputRandom()
+    {
+        if (gameMananger.isGamePadDetect)
+        {
+            if (Input.GetKeyDown(KeyCode.J) || Gamepad.current.leftTrigger.wasPressedThisFrame)
+            {
+                setNumber = 2;
+                isSetNumber = true;
+                StartCoroutine(battleSystems.FuncDisplayUIAndChangeState());
+
+            }
+            else if (Input.GetKeyDown(KeyCode.K) || Gamepad.current.rightTrigger.wasPressedThisFrame)
+            {
+                setNumber = 1;
+                isSetNumber = true;
+                StartCoroutine(battleSystems.FuncDisplayUIAndChangeState());
+
+
+            }
+            else if (!Input.GetKeyDown(KeyCode.K) && Input.GetKeyDown(KeyCode.J) && Gamepad.current.rightTrigger.wasPressedThisFrame && Gamepad.current.leftTrigger.wasPressedThisFrame && Input.anyKey)
+            {
+                Debug.Log("not right input!!!");
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                setNumber = 2;
+                isSetNumber = true;
+                StartCoroutine(battleSystems.FuncDisplayUIAndChangeState());
+
+            }
+            else if (Input.GetKeyDown(KeyCode.K))
+            {
+                setNumber = 1;
+                isSetNumber = true;
+                StartCoroutine(battleSystems.FuncDisplayUIAndChangeState());
+            }
+            else if (!Input.GetKeyDown(KeyCode.K) && Input.GetKeyDown(KeyCode.J) && Input.anyKey)
+            {
+                Debug.Log("not right input!!!");
+            }
+        }
+        Debug.Log(setNumber);
+    }
+    #endregion
+
     #region SwitchFirstToSecond
     public void SwitchFirstToSecond()
     {
@@ -178,6 +229,40 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region Attack
+    public void InputAttack()
+    {
+        if (gameMananger.isGamePadDetect)
+        {
+            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Gamepad.current.rightTrigger.wasPressedThisFrame) && !isEndAttack) 
+            {
+                isEndAttack = true;
+                StartCoroutine(battleSystems.PlayerTurnAttack());
+                Debug.Log("Player_" + name + "Attack_" + battleSystems.monsterControl);
+            }
+            else
+            {
+                Debug.Log("not right input!!!");
+            }
+        }
+        else
+        {
+            if ((Input.GetKeyDown(KeyCode.Return) && !isEndAttack))
+            {
+                isEndAttack = true;
+                StartCoroutine(battleSystems.PlayerTurnAttack());
+                Debug.Log("Player_" + name + "Attack_" + battleSystems.monsterControl);
+
+            }
+            else if (!Input.GetKeyDown(KeyCode.Space) && Input.anyKey) 
+            {
+                Debug.Log("not right input!!!");
+            }
+
+        }
+    }
+                
+    #endregion
     private void SetBoolForSwitch(bool canPress, bool isSwtichL_To_F, bool isSwtichF_To_S)
     {
         gameMananger.canPress = canPress;
@@ -190,48 +275,20 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Monster"))
         {
-            Debug.Log("hit");
+            Debug.Log("Found Monster");
 
             battleSystems.state = BattleSystems.battleStage.RANDOM;
-            uIController.oddOrEvenHead.SetActive(true);           
+            displayUI.oddOrEvenHead.SetActive(true);
+            playerManager.currentPlayerStage = PlayerManager.playerStage.BATTLE;
+
+            //get monster detech
+            MonsterController _monster = collision.transform.root.GetChild(0).GetComponent<MonsterController>();
+            battleSystems.monsterControl = _monster;
+
+            //get first player
+            PlayerController _player = playerManager.heroList[0].gameObject.GetComponent<PlayerController>();
+            battleSystems.playerControl = _player;
         }
     }
-
-    IEnumerator wait()
-    {
-        battleSystems.RandomNumber();
-        uIController.numberText.text = battleSystems.rand.ToString();
-        uIController.result.SetActive(true);
-        uIController.uiOddEven.SetActive(false);      
-
-        //uIController.oddOrEvenHead.SetActive(false);
-        //Debug.Log("CloseUI");
-        if (setNumber.Equals(2) && battleSystems.isEven)
-        {
-            uIController.tellPlayer.text = "Just lucky...";
-
-            // battleSystems.state = BattleSystems.battleStage.PLAYERTURN;
-        }
-        else if (setNumber.Equals(2) && !battleSystems.isEven)
-        {
-            uIController.tellPlayer.text = "Too badd!!";
-            //battleSystems.state = BattleSystems.battleStage.MONSTERTURN;
-        }
-        else if (setNumber.Equals(1) && battleSystems.isEven)
-        {
-            uIController.tellPlayer.text = "Too badd!!";
-            // battleSystems.state = BattleSystems.battleStage.MONSTERTURN;
-        }
-        else
-        {
-            uIController.tellPlayer.text = "Just lucky...";
-            //battleSystems.state = BattleSystems.battleStage.PLAYERTURN;
-        }
-        yield return new WaitForSeconds(3f);
-        // Debug.Log("ChangeState");
-    }
-
-
-
 }
 

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    public enum playerStage { MOVE, BATTLE, DIE }
+    public playerStage currentPlayerStage;
     [Space]
     public List<Vector2> heroPosition = new List<Vector2>();
     public List<Transform> heroList = new List<Transform>();
@@ -15,11 +17,11 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         GetData();
-
+        currentPlayerStage = playerStage.MOVE;
     }
     private void Update()
     {
-      //  FlipXAllHero();
+        //  FlipXAllHero();
 
     }
 
@@ -96,6 +98,22 @@ public class PlayerManager : MonoBehaviour
         GetData();
 
     }
+    public void ManageStatUI()
+    {
+        for (int i = 0; i < heroList.Count; i++)
+        {
+            if (i == 0) 
+            {
+                heroList[i].GetComponent<PlayerUI>().arrowGroup.SetActive(true);
+                heroList[i].GetComponent<PlayerUI>().statGroup.SetActive(false);
+            }
+            else
+            {
+                heroList[i].GetComponent<PlayerUI>().arrowGroup.SetActive(false);
+                heroList[i].GetComponent<PlayerUI>().statGroup.SetActive(true);
+            }
+        }
 
-  
+    }
+
 }

@@ -5,10 +5,9 @@ using UnityEngine;
 [System.Serializable]
 public class Unit
 {
-    public int health = 2;
-    public int attack = 1;
-    public int level = 1;
+    public int health;
+    public int attack;
+    public int level;
     public int currentHealth;
-    public float exp = 0;
-
+    public float exp = 0; 
 }
