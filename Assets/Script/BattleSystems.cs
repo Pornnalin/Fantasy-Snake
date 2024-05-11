@@ -15,14 +15,15 @@ public class BattleSystems : MonoBehaviour
     private DisplayUI displayUI;
     public MonsterController monsterControl;
     public PlayerController playerControl;
-    public PlayerManager playerManager;
-    public GameMananger gameMananger;
+   // public PlayerManager playerManager;
+  //  private GameMananger gameMananger;
+    public bool isPlayerContinue = false;
 
     // Start is called before the first frame update
     void Start()
     {
         state = battleStage.NONE;
-        playerManager = FindAnyObjectByType<PlayerManager>();
+      //  playerManager = FindAnyObjectByType<PlayerManager>();
         displayUI = FindAnyObjectByType<DisplayUI>();
 
     }
@@ -74,8 +75,16 @@ public class BattleSystems : MonoBehaviour
                 }
                 break;
             case battleStage.WON:
+                displayUI.playerBattleUI.SetActive(false);
+                displayUI.monsBattleUI.SetActive(false);
+                state = battleStage.NONE;
+                PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
                 break;
             case battleStage.LOST:
+                if (PlayerManager.instance.heroList.Count == 1)
+                {
+                    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
+                }
                 break;
         }
     }
@@ -124,8 +133,8 @@ public class BattleSystems : MonoBehaviour
         displayUI.playerHealthText.text = playerControl.playerProfile.health.ToString();
         displayUI.playerAttackText.text = playerControl.playerProfile.attack.ToString();
 
-        displayUI.monsterAttackText.text = monsterControl.monsterProflie.health.ToString();
-        displayUI.monsterHealthText.text = monsterControl.monsterProflie.attack.ToString();
+        displayUI.monsterHealthText.text = monsterControl.monsterProflie.health.ToString();
+        displayUI.monsterAttackText.text = monsterControl.monsterProflie.attack.ToString();
     }
     public IEnumerator PlayerTurnAttack()
     {
@@ -133,6 +142,7 @@ public class BattleSystems : MonoBehaviour
         if (monsterControl.monsterProflie.health > 0)
         {
             monsterControl.monsterProflie.health -= playerControl.playerProfile.attack;
+            Debug.Log("Player_Hit_Monster!!");
 
             yield return new WaitForSeconds(1f);
 
@@ -143,7 +153,7 @@ public class BattleSystems : MonoBehaviour
             else
             {
                 state = battleStage.WON;
-                playerManager.amountKilled += 1;
+                PlayerManager.instance.amountKilled += 1;
                 playerControl.playerProfile.exp += 0.5f;
             }
             playerControl.isEndAttack = false;
@@ -173,15 +183,42 @@ public class BattleSystems : MonoBehaviour
             else
             {
                 state = battleStage.LOST;
-                monsterControl.monsterProflie.exp += 1f * gameMananger.statInfo.growing;
+                monsterControl.monsterProflie.exp += 1f * GameMananger.instance.statInfo.growing;
+
+                if (PlayerManager.instance.heroList.Count > 1)
+                {
+                    StartCoroutine(Wait());
+
+                }
+                else
+                {
+                    isPlayerContinue = false;
+                }
+
             }
+
             isMonsAttack = false;
         }
         else
         {
+          
             state = battleStage.LOST;
             isMonsAttack = false;
 
+
         }
+    }
+    IEnumerator Wait()
+    {
+        isPlayerContinue = true;
+
+        if (isPlayerContinue)
+        {
+            PlayerManager.instance.RemovePlayerDie();
+            state = battleStage.PLAYERTURN;
+        }
+        yield return new WaitForSeconds(2f);
+        isPlayerContinue = false;
+
     }
 }

@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public Unit playerProfile;
-    private GameMananger gameMananger;
-    private PlayerManager playerManager;
+ //   private GameMananger gameMananger;
+  //  private PlayerManager playerManager;
     private BattleSystems battleSystems;
     public int setNumber = 0;
     public bool isSetNumber = false;
@@ -18,23 +18,23 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameMananger = FindAnyObjectByType<GameMananger>();
-        playerManager = FindAnyObjectByType<PlayerManager>();
+        //gameMananger = FindAnyObjectByType<GameMananger>();
+     //   playerManager = FindAnyObjectByType<PlayerManager>();
         battleSystems = FindAnyObjectByType<BattleSystems>();
         displayUI = FindAnyObjectByType<DisplayUI>();
         playerUI = FindAnyObjectByType<PlayerUI>();
 
-        playerProfile.attack = gameMananger.statInfo.minPlayerAttack;
-        playerProfile.health = gameMananger.statInfo.minPlayerHeart;
+        playerProfile.attack = GameMananger.instance.statInfo.minPlayerAttack;
+        playerProfile.health = GameMananger.instance.statInfo.minPlayerHeart;
 
         
-        Debug.Log("SetDefault_Player" + name);
+        //Debug.Log("SetDefault_Player" + name);
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch (playerManager.currentPlayerStage)
+        switch (PlayerManager.instance.currentPlayerStage)
         {
             case PlayerManager.playerStage.MOVE:
                 SwitchFirstToSecond();
@@ -55,11 +55,11 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             case BattleSystems.battleStage.PLAYERTURN:
-                playerManager.ManageStatUI();
+                PlayerManager.instance.ManageStatUI();
                 InputAttack();
                 break;
             case BattleSystems.battleStage.MONSTERTURN:
-                playerManager.ManageStatUI();
+                PlayerManager.instance.ManageStatUI();
 
                 break;
             case BattleSystems.battleStage.WON:
@@ -71,7 +71,7 @@ public class PlayerController : MonoBehaviour
     #region InputRandom
     private void InputRandom()
     {
-        if (gameMananger.isGamePadDetect)
+        if (GameMananger.instance.isGamePadDetect)
         {
             if (Input.GetKeyDown(KeyCode.J) || Gamepad.current.leftTrigger.wasPressedThisFrame)
             {
@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("not right input!!!");
             }
         }
-        Debug.Log(setNumber);
+      //  Debug.Log(setNumber);
     }
     #endregion
 
@@ -123,9 +123,9 @@ public class PlayerController : MonoBehaviour
         //       Pressing Q on the keyboard or the left shoulder button on the gamepad will
         //rotate the second character in line to be the front character and the front
         //character to be the last.
-        if (gameMananger.isGamePadDetect && gameMananger.canPress)
+        if (GameMananger.instance.isGamePadDetect && GameMananger.instance.canPress)
         {
-            if ((Input.GetKeyDown(KeyCode.Q) || Gamepad.current.leftShoulder.isPressed) && !gameMananger.isSwtichF_To_S)
+            if ((Input.GetKeyDown(KeyCode.Q) || Gamepad.current.leftShoulder.isPressed) && !GameMananger.instance.isSwtichF_To_S)
             {
                 SetBoolForSwitch(false, true, true);
                 StartCoroutine(ChangePositionInTeam_F_To_L());
@@ -133,7 +133,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("SwapF_S");
             }
         }
-        else if (gameMananger.canPress)
+        else if (GameMananger.instance.canPress)
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
@@ -147,26 +147,26 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator ChangePositionInTeam_F_To_L()
     {
-        List<Vector2> originPos = playerManager.heroPosition;
+        List<Vector2> originPos = PlayerManager.instance.heroPosition;
         int lastIndex = originPos.Count - 1;
 
         for (int i = 0; i < originPos.Count; i++)
         {
             if (i == 0)
             {
-                playerManager.heroList[i].position = originPos[lastIndex];
-                playerManager.heroList[i].SetSiblingIndex(lastIndex);
+                PlayerManager.instance.heroList[i].position = originPos[lastIndex];
+                PlayerManager.instance.heroList[i].SetSiblingIndex(lastIndex);
             }
             else
             {
                 int erase = i - 1;
-                playerManager.heroList[i].position = originPos[erase];
-                playerManager.heroList[i].SetSiblingIndex(erase);
+                PlayerManager.instance.heroList[i].position = originPos[erase];
+                PlayerManager.instance.heroList[i].SetSiblingIndex(erase);
 
             }
         }
 
-        playerManager.ResetListAndAddNew();
+        PlayerManager.instance.ResetListAndAddNew();
         yield return new WaitForSeconds(3f);
         SetBoolForSwitch(true, false, false);
     }
@@ -180,16 +180,16 @@ public class PlayerController : MonoBehaviour
         // switch the last character in line to be the front character and the front
         // character to be the second
 
-        if (gameMananger.isGamePadDetect && gameMananger.canPress)
+        if (GameMananger.instance.isGamePadDetect && GameMananger.instance.canPress)
         {
-            if ((Input.GetKeyDown(KeyCode.E) || Gamepad.current.rightShoulder.isPressed) && !gameMananger.isSwtichL_To_F)
+            if ((Input.GetKeyDown(KeyCode.E) || Gamepad.current.rightShoulder.isPressed) && !GameMananger.instance.isSwtichL_To_F)
             {
                 SetBoolForSwitch(false, true, true);
                 StartCoroutine(ChangePositionInTeam_L_To_F());
                 Debug.Log("SwtichL_S");
             }
         }
-        else if (gameMananger.canPress)
+        else if (GameMananger.instance.canPress)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -204,7 +204,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator ChangePositionInTeam_L_To_F()
     {
-        List<Vector2> originPos = playerManager.heroPosition;
+        List<Vector2> originPos = PlayerManager.instance.heroPosition;
         int lastIndex = originPos.Count - 1;
 
         for (int i = 0; i < originPos.Count; i++)
@@ -212,18 +212,18 @@ public class PlayerController : MonoBehaviour
             if (i < lastIndex)
             {
                 int add = i + 1;
-                playerManager.heroList[i].position = originPos[add];
-                playerManager.heroList[i].SetSiblingIndex(add);
+                PlayerManager.instance.heroList[i].position = originPos[add];
+                PlayerManager.instance.heroList[i].SetSiblingIndex(add);
                 // Debug.Log(i);
             }
             else
             {
-                playerManager.heroList[lastIndex].position = originPos[0];
-                playerManager.heroList[lastIndex].SetSiblingIndex(0);
+                PlayerManager.instance.heroList[lastIndex].position = originPos[0];
+                PlayerManager.instance.heroList[lastIndex].SetSiblingIndex(0);
             }
         }
 
-        playerManager.ResetListAndAddNew();
+        PlayerManager.instance.ResetListAndAddNew();
         yield return new WaitForSeconds(3f);
         SetBoolForSwitch(true, false, false);
     }
@@ -232,7 +232,7 @@ public class PlayerController : MonoBehaviour
     #region Attack
     public void InputAttack()
     {
-        if (gameMananger.isGamePadDetect)
+        if (GameMananger.instance.isGamePadDetect)
         {
             if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Gamepad.current.rightTrigger.wasPressedThisFrame) && !isEndAttack) 
             {
@@ -265,9 +265,9 @@ public class PlayerController : MonoBehaviour
     #endregion
     private void SetBoolForSwitch(bool canPress, bool isSwtichL_To_F, bool isSwtichF_To_S)
     {
-        gameMananger.canPress = canPress;
-        gameMananger.isSwtichF_To_S = isSwtichL_To_F;
-        gameMananger.isSwtichL_To_F = isSwtichF_To_S;
+        GameMananger.instance.canPress = canPress;
+        GameMananger.instance.isSwtichF_To_S = isSwtichL_To_F;
+        GameMananger.instance.isSwtichL_To_F = isSwtichF_To_S;
     }
 
 
@@ -277,18 +277,41 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Found Monster");
 
-            battleSystems.state = BattleSystems.battleStage.RANDOM;
-            displayUI.oddOrEvenHead.SetActive(true);
-            playerManager.currentPlayerStage = PlayerManager.playerStage.BATTLE;
+            if (!battleSystems.isPlayerContinue)
+            {
+                battleSystems.state = BattleSystems.battleStage.RANDOM;
+                displayUI.oddOrEvenHead.SetActive(true);
+                PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.BATTLE;
 
-            //get monster detech
-            MonsterController _monster = collision.transform.root.GetChild(0).GetComponent<MonsterController>();
-            battleSystems.monsterControl = _monster;
+                GetMonster(collision);
+                GetPlayer();
+            }
+            else
+            {
+                GetPlayer();
+            }
 
-            //get first player
-            PlayerController _player = playerManager.heroList[0].gameObject.GetComponent<PlayerController>();
-            battleSystems.playerControl = _player;
         }
+
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            collision.gameObject.SetActive(false);
+            PlayerManager.instance.RemovePlayerDie();
+        }
+    }
+
+    private void GetPlayer()
+    {
+        //get first player
+        PlayerController _player = PlayerManager.instance.heroList[0].gameObject.GetComponent<PlayerController>();
+        battleSystems.playerControl = _player;
+    }
+
+    private void GetMonster(Collider2D collision)
+    {
+        //get monster detech
+        MonsterController _monster = collision.transform.parent.parent.GetComponent<MonsterController>();
+        battleSystems.monsterControl = _monster;
     }
 }
 

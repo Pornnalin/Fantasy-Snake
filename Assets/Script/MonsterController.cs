@@ -5,13 +5,13 @@ using UnityEngine;
 public class MonsterController : MonoBehaviour
 {
     public Unit monsterProflie;
-    private GameMananger gameMananger;
+  //  private GameMananger gameMananger;
     // Start is called before the first frame update
     void Start()
     {
-        gameMananger = FindAnyObjectByType<GameMananger>();
-        monsterProflie.attack = gameMananger.statInfo.minMonsterAttack;
-        monsterProflie.health = gameMananger.statInfo.minMonsterHeart;
+       // gameMananger = FindAnyObjectByType<GameMananger>();
+        monsterProflie.attack = GameMananger.instance.statInfo.minMonsterAttack;
+        monsterProflie.health = GameMananger.instance.statInfo.minMonsterHeart;
         Debug.Log("SetDefault_monster" + name);
 
     }

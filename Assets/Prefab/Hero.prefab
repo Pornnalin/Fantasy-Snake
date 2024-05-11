@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1819877397984552066}
   - component: {fileID: 6960591978491932043}
   - component: {fileID: 370403565100519814}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Heart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8092397490187838510}
   - component: {fileID: 3210194782944787350}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6273053062200065338}
   - component: {fileID: 8227598325867391383}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 5993013672361927412}
   - component: {fileID: 89865839428040208}
   - component: {fileID: 3755559714011926364}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: 'HeartPanel '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 4058239994217981000}
   - component: {fileID: 5131701173430405878}
   - component: {fileID: 702536394146794363}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: SwordPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -407,7 +407,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1974375538341918851}
   - component: {fileID: 7159002178533738579}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -492,7 +492,7 @@ GameObject:
   - component: {fileID: 5875197062871040320}
   - component: {fileID: 3696792277073043666}
   - component: {fileID: 5035633565426725169}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Sword
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -565,7 +565,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 390982226554205464}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: UiMove
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -804,7 +804,7 @@ GameObject:
   - component: {fileID: 6571384610046546813}
   - component: {fileID: 7018996657171486589}
   - component: {fileID: 3809849662284981000}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: H_T
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -938,7 +938,7 @@ GameObject:
   - component: {fileID: 2508949419646577638}
   - component: {fileID: 6706359408118345101}
   - component: {fileID: 4476713900308008043}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: S_T
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1076,9 +1076,9 @@ GameObject:
   - component: {fileID: 1117173124655849548}
   - component: {fileID: 9176483162993980489}
   - component: {fileID: 5342169108539568979}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Hero
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1098,6 +1098,7 @@ Transform:
   m_Children:
   - {fileID: 2805804176599465643}
   - {fileID: 6686486083113681044}
+  - {fileID: 5928164560996552547}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8124308586138112644
@@ -1240,10 +1241,6 @@ MonoBehaviour:
   isLockD: 0
   isLockR: 0
   isLockL: 0
-  collidersHit:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   arrow:
   - {fileID: 6446232644059096373}
   - {fileID: 7159002178533738579}
@@ -1251,7 +1248,7 @@ MonoBehaviour:
   - {fileID: 8227598325867391383}
   colorEnable: {r: 1, g: 1, b: 1, a: 1}
   colorDisable: {r: 0.690566, g: 0.690566, b: 0.690566, a: 0.62352943}
-  playerManager: {fileID: 0}
+  mark: {fileID: 5928164560996552547}
 --- !u!114 &9176483162993980489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1301,7 +1298,7 @@ GameObject:
   - component: {fileID: 723802394027458882}
   - component: {fileID: 7902730876430131966}
   - component: {fileID: 4920313253042352271}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: CanvaStats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1402,7 +1399,7 @@ GameObject:
   m_Component:
   - component: {fileID: 608144685091229117}
   - component: {fileID: 6446232644059096373}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1470,6 +1467,90 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!1 &8499500935984586546
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5928164560996552547}
+  - component: {fileID: 4303520642339121907}
+  m_Layer: 7
+  m_Name: Mark
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5928164560996552547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8499500935984586546}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 106565322787673970}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &4303520642339121907
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8499500935984586546}
+  m_Enabled: 0
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf, type: 3}
+  m_Color: {r: 0.8603525, g: 0, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 2
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0

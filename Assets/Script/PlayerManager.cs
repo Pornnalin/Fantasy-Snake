@@ -4,16 +4,31 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public enum playerStage { MOVE, BATTLE, DIE }
+    public static PlayerManager instance;
+    public enum playerStage { MOVE, BATTLE, GAMEOVER }
     public playerStage currentPlayerStage;
     [Space]
     public List<Vector2> heroPosition = new List<Vector2>();
     public List<Transform> heroList = new List<Transform>();
+  //  public List<Vector2> her = new List<Vector2>();
     public List<SpriteRenderer> heroSprite = new List<SpriteRenderer>();
     [Space]
     public int amountKilled;
     private SpriteRenderer heroFirst;
+    public Transform playerDieTran;
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
     void Start()
     {
         GetData();
@@ -46,7 +61,7 @@ public class PlayerManager : MonoBehaviour
         }
         heroFirst = heroList[0].GetComponent<SpriteRenderer>();
     }
-    public void UpdatePostionTeamWhenMove()
+    public void WhenMoveUpdatePostionTeam()
     {
         int childLength = this.transform.childCount - 1;
         for (int i = 0; i < childLength; i++)
@@ -102,7 +117,7 @@ public class PlayerManager : MonoBehaviour
     {
         for (int i = 0; i < heroList.Count; i++)
         {
-            if (i == 0) 
+            if (i == 0)
             {
                 heroList[i].GetComponent<PlayerUI>().arrowGroup.SetActive(true);
                 heroList[i].GetComponent<PlayerUI>().statGroup.SetActive(false);
@@ -115,5 +130,38 @@ public class PlayerManager : MonoBehaviour
         }
 
     }
+    public void RemovePlayerDie()
+    {    
 
+        List<Vector2> originPos = new List<Vector2>(heroPosition);
+        List<Vector2> copy = new List<Vector2>();
+        int lastIndex = originPos.Count - 1;
+        for (int i = 0; i < originPos.Count; i++)
+        {
+            if (i < lastIndex)
+            {
+                copy.Add(originPos[i]);
+
+            }
+
+        }
+        heroPosition = new List<Vector2>();
+        foreach (var item in copy)
+        {
+            heroPosition.Add(item);
+        }
+        
+        heroList[0].gameObject.SetActive(false);
+        GameObject move = heroList[0].gameObject;
+        move.transform.SetParent(playerDieTran);
+        Debug.Log(move.name + "___Die");
+        heroList.RemoveAt(0);
+
+        for (int i = 0; i < heroList.Count; i++)
+        {
+            heroList[i].position = new Vector3();
+            heroList[i].position = new Vector3(copy[i].x, copy[i].y, 0);
+            ScriptTurnONOFF(i);
+        }
+    }
 }

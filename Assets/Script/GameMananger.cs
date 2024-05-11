@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class GameMananger : MonoBehaviour
 {
+    public static GameMananger instance;
     public StatInfo statInfo;
     [Header("GamePad")]
     public bool isGamePadDetect;
@@ -15,6 +16,17 @@ public class GameMananger : MonoBehaviour
     public bool canPress = true;
 
     // Start is called before the first frame update
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
     void Start()
     {
 

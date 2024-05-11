@@ -10,19 +10,20 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 currentPos;
     [SerializeField] private bool isLockU, isLockD, isLockR, isLockL;
     [Space]
-    [SerializeField] private SpriteRenderer[] collidersHit;
+  //  [SerializeField] private SpriteRenderer[] collidersHit;
     [SerializeField] private SpriteRenderer[] arrow;
     [SerializeField] private Color colorEnable, colorDisable;
-    [SerializeField] private PlayerManager playerManager;
-    private GameMananger gameMananger;
+    [SerializeField] private Transform mark;
+   // [SerializeField] private PlayerManager playerManager;
+   // private GameMananger gameMananger;
 
     // Start is called before the first frame update
     void Start()
     {
         //   playerInput = GetComponent<PlayerInput>();
         rigi = GetComponent<Rigidbody2D>();
-        playerManager = transform.root.GetComponent<PlayerManager>();
-        gameMananger = FindAnyObjectByType<GameMananger>();
+        //playerManager = transform.root.GetComponent<PlayerManager>();
+      //  gameMananger = FindAnyObjectByType<GameMananger>();
         currentPos = transform.position;
 
     }
@@ -32,10 +33,10 @@ public class PlayerMovement : MonoBehaviour
     {
         // moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
         // Debug.Log(Gamepad.current);        
-        switch (playerManager.currentPlayerStage)
+        switch (PlayerManager.instance.currentPlayerStage)
         {
             case PlayerManager.playerStage.MOVE:
-                if (gameMananger.isGamePadDetect)
+                if (GameMananger.instance.isGamePadDetect)
                 {
                     InputGamePadAndKeyborad();
                     //Check();
@@ -48,8 +49,7 @@ public class PlayerMovement : MonoBehaviour
                 break;
             case PlayerManager.playerStage.BATTLE:
                 break;
-            case PlayerManager.playerStage.DIE:
-                break;
+           
         }
     }
     private void LateUpdate()
@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
             isLockU = false;
             UpdateColorArrow(1);
             transform.position = currentPos;
-            playerManager.UpdatePostionTeamWhenMove();
+            PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
         }
         else if ((Input.GetKeyDown(KeyCode.S) || Gamepad.current.dpad.down.wasPressedThisFrame) && !isLockD)
@@ -80,26 +80,26 @@ public class PlayerMovement : MonoBehaviour
             isLockD = false;
             UpdateColorArrow(0);
             transform.position = currentPos;
-            playerManager.UpdatePostionTeamWhenMove();
+            PlayerManager.instance.WhenMoveUpdatePostionTeam();
         }
         else if ((Input.GetKeyDown(KeyCode.A) || Gamepad.current.dpad.left.wasPressedThisFrame) && !isLockL)
         {
             currentPos += Vector3.left;
             //playerSprite.flipX = true;
-            playerManager.FlipXAllHero(true);
+            PlayerManager.instance.FlipXAllHero(true);
             isLockR = true;
             isLockD = false;
             isLockU = false;
             isLockL = false;
             UpdateColorArrow(2);
             transform.position = currentPos;
-            playerManager.UpdatePostionTeamWhenMove();
+            PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
         }
         else if ((Input.GetKeyDown(KeyCode.D) || Gamepad.current.dpad.right.wasPressedThisFrame) && !isLockR)
         {
             currentPos += Vector3.right;
-            playerManager.FlipXAllHero(false);
+            PlayerManager.instance.FlipXAllHero(false);
             //playerSprite.flipX = false;
             isLockL = true;
             isLockR = false;
@@ -107,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
             isLockD = false;
             UpdateColorArrow(3);
             transform.position = currentPos;
-            playerManager.UpdatePostionTeamWhenMove();
+            PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
         }
     }
@@ -117,34 +117,35 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W) && !isLockU)
         {
             currentPos += Vector3.up;
-           // transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
             isLockD = true;
             isLockL = false;
             isLockR = false;
             isLockU = false;
             UpdateColorArrow(1);
             transform.position = currentPos;
-            playerManager.UpdatePostionTeamWhenMove();
+            PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
         }
         else if (Input.GetKeyDown(KeyCode.S) && !isLockD)
         {
             currentPos += Vector3.down;
-          //  transform.rotation = Quaternion.Euler(new Vector3(0, 0, -180f));
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180f));
+
             isLockU = true;
             isLockL = false;
             isLockR = false;
             isLockD = false;
             UpdateColorArrow(0);
             transform.position = currentPos;
-            playerManager.UpdatePostionTeamWhenMove();
+            PlayerManager.instance.WhenMoveUpdatePostionTeam();
         }
         else if (Input.GetKeyDown(KeyCode.A) && !isLockL)
         {
             currentPos += Vector3.left;
-           // transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90f));
+             transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90f));
             //playerSprite.flipX = true;
-            playerManager.FlipXAllHero(true);
+            PlayerManager.instance.FlipXAllHero(true);
 
             isLockR = true;
             isLockD = false;
@@ -152,21 +153,23 @@ public class PlayerMovement : MonoBehaviour
             isLockL = false;
             UpdateColorArrow(2);
             transform.position = currentPos;
-            playerManager.UpdatePostionTeamWhenMove();
+            PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
         }
         else if (Input.GetKeyDown(KeyCode.D) && !isLockR)
         {
             currentPos += Vector3.right;
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90));
+
             //playerSprite.flipX = false;
-            playerManager.FlipXAllHero(false);
+            PlayerManager.instance.FlipXAllHero(false);
             isLockL = true;
             isLockR = false;
             isLockU = false;
             isLockD = false;
             UpdateColorArrow(3);
             transform.position = currentPos;
-            playerManager.UpdatePostionTeamWhenMove();
+            PlayerManager.instance.WhenMoveUpdatePostionTeam();
         }
 
     }
@@ -180,13 +183,18 @@ public class PlayerMovement : MonoBehaviour
     }
     public void CheckPlayerMove()
     {
-        for (int i = 0; i < playerManager.heroList.Count; i++)
+        for (int i = 0; i < PlayerManager.instance.heroList.Count; i++)
         {
             if (i != 0)
             {
-                if (playerManager.heroList[0].transform.position == playerManager.heroList[i].transform.position)
+                if (PlayerManager.instance.heroList[0].transform.position == PlayerManager.instance.heroList[i].transform.position)
                 {
-                    playerManager.currentPlayerStage = PlayerManager.playerStage.DIE;
+                    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
+                }
+                else if(mark.transform.position== PlayerManager.instance.heroList[i].transform.position)
+                {
+                    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
+
                 }
             }
         }
