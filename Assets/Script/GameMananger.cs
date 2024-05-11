@@ -14,7 +14,9 @@ public class GameMananger : MonoBehaviour
     public bool isSwtichF_To_S = false;
     public bool isSwtichL_To_F = false;
     public bool canPress = true;
-
+    [Space]
+    [Header("Spawn")]
+    public bool isPlayerSpwan;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -38,6 +40,35 @@ public class GameMananger : MonoBehaviour
         isGamePadDetect = Gamepad.current == null ? false : true;
 
     }
+    [ContextMenu("testChance")]
+    public void ChanceSpawn()
+    {
+        int a = Random.Range(0, 101);
+        if (a <= statInfo.chancePlayer)
+        {
+            isPlayerSpwan = true;
+        }
+        else if (a >= statInfo.chancePlayer && a <= statInfo.chanceMonster)
+        {
+            isPlayerSpwan = false;
+
+        }
+        Debug.Log(a);
+    }
+    public int AmountSpawn()
+    {
+        int amount = new int();
+        if (PlayerManager.instance.heroList.Count > 3)
+        {
+            amount = statInfo.anmountPlayerSpawanMin;
+        }
+        if (PlayerManager.instance.heroList.Count < 3)
+        {
+            amount = statInfo.anmountPlayerSpawanMin;
+        }
+
+        return amount;
+    }
 }
 [System.Serializable]
 public class StatInfo
@@ -60,5 +91,9 @@ public class StatInfo
     [Range(0.1f, 2), Tooltip("min =0.1f,max=2")]
     public float growing;
     [Space]
+    [Tooltip("chance/100%")]
     public float chancePlayer, chanceMonster;
+    [Space]
+    [Range(1, 5)]
+    public int anmountPlayerSpawanMin, anmountPlayerSpawanMax, anmountMonsterSpawanMin, anmountMonsterSpawanMax;
 }

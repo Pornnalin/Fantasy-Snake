@@ -156,13 +156,13 @@ public class PlayerController : MonoBehaviour
         {
             if (i == 0)
             {
-                PlayerManager.instance.heroList[i].position = originPos[lastIndex];
+                PlayerManager.instance.heroList[i].localPosition = originPos[lastIndex];
                 PlayerManager.instance.heroList[i].SetSiblingIndex(lastIndex);
             }
             else
             {
                 int erase = i - 1;
-                PlayerManager.instance.heroList[i].position = originPos[erase];
+                PlayerManager.instance.heroList[i].localPosition = originPos[erase];
                 PlayerManager.instance.heroList[i].SetSiblingIndex(erase);
 
             }
@@ -214,13 +214,13 @@ public class PlayerController : MonoBehaviour
             if (i < lastIndex)
             {
                 int add = i + 1;
-                PlayerManager.instance.heroList[i].position = originPos[add];
+                PlayerManager.instance.heroList[i].localPosition = originPos[add];
                 PlayerManager.instance.heroList[i].SetSiblingIndex(add);
                 // Debug.Log(i);
             }
             else
             {
-                PlayerManager.instance.heroList[lastIndex].position = originPos[0];
+                PlayerManager.instance.heroList[lastIndex].localPosition = originPos[0];
                 PlayerManager.instance.heroList[lastIndex].SetSiblingIndex(0);
             }
         }

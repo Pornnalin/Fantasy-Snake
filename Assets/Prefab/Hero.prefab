@@ -701,11 +701,11 @@ Transform:
   m_GameObject: {fileID: 5982669539322849303}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.441, z: 0}
+  m_LocalPosition: {x: 0, y: -0.44100013, z: 0}
   m_LocalScale: {x: 0.609, y: 0.2723, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2805804176599465643}
+  m_Father: {fileID: 106565322787673970}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &7475572652680019592
 SpriteRenderer:
@@ -774,7 +774,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2805804176599465643
 Transform:
   m_ObjectHideFlags: 0
@@ -790,7 +790,6 @@ Transform:
   m_Children:
   - {fileID: 7357071262830434686}
   - {fileID: 390982226554205464}
-  - {fileID: 4440616983573002468}
   m_Father: {fileID: 106565322787673970}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6776061352987051033
@@ -1099,6 +1098,7 @@ Transform:
   - {fileID: 2805804176599465643}
   - {fileID: 6686486083113681044}
   - {fileID: 5928164560996552547}
+  - {fileID: 4440616983573002468}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8124308586138112644
@@ -1237,10 +1237,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24c01ff0e5b92a744b6863942a5885fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isLockU: 0
-  isLockD: 0
-  isLockR: 0
-  isLockL: 0
   arrow:
   - {fileID: 6446232644059096373}
   - {fileID: 7159002178533738579}

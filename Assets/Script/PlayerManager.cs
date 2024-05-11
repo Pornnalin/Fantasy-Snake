@@ -55,7 +55,7 @@ public class PlayerManager : MonoBehaviour
         int childLength = this.transform.childCount;
         for (int i = 0; i < childLength; i++)
         {
-            heroPosition.Add(transform.GetChild(i).transform.position);
+            heroPosition.Add(transform.GetChild(i).transform.localPosition);
             heroRotation.Add(transform.GetChild(i).transform.localRotation.eulerAngles.z);
             heroList.Add(transform.GetChild(i));
             heroSprite.Add(transform.GetChild(i).GetComponent<SpriteRenderer>());

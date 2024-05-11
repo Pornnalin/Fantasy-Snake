@@ -18,14 +18,14 @@ public class BattleSystems : MonoBehaviour
    // public PlayerManager playerManager;
   //  private GameMananger gameMananger;
     public bool isPlayerContinue = false;
-
+    private Spawn spawn;
     // Start is called before the first frame update
     void Start()
     {
         state = battleStage.NONE;
       //  playerManager = FindAnyObjectByType<PlayerManager>();
         displayUI = FindAnyObjectByType<DisplayUI>();
-
+        spawn = FindAnyObjectByType<Spawn>();
     }
 
     // Update is called once per frame
@@ -40,19 +40,7 @@ public class BattleSystems : MonoBehaviour
     }
     private void Update()
     {
-        //if (isRand)
-        //{
-        //    if (rand % 2 == 0)
-        //    {
-        //        Debug.Log(rand + "true");
-        //        isEven = true;
-        //    }
-        //    else
-        //    {
-        //        Debug.Log(rand + "fasle");
-        //        isEven = false;
-        //    }
-        //}
+     
         switch (state)
         {
             case battleStage.NONE:
@@ -77,6 +65,11 @@ public class BattleSystems : MonoBehaviour
             case battleStage.WON:
                 displayUI.playerBattleUI.SetActive(false);
                 displayUI.monsBattleUI.SetActive(false);
+                if (!spawn.isSpwan)
+                {
+                    spawn.isSpwan = true;
+                    spawn.SpawnPlayer();
+                }
                 state = battleStage.NONE;
                 PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
                 break;

@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
         rigi = GetComponent<Rigidbody2D>();
         //playerManager = transform.root.GetComponent<PlayerManager>();
         //  gameMananger = FindAnyObjectByType<GameMananger>();
-        currentPos = transform.position;
+        currentPos = transform.localPosition;
       //  currentRotZ = transform.localRotation.eulerAngles.z;
     }
 
@@ -45,6 +45,8 @@ public class PlayerMovement : MonoBehaviour
                 else
                 {
                     InputOnlyKeyboard();
+                   // Debug.Log(currentPos);
+
                 }
                 CheckPlayerMove();
                 break;
@@ -124,21 +126,20 @@ public class PlayerMovement : MonoBehaviour
             PlayerManager.instance.isLockR = false;
             PlayerManager.instance.isLockU = false;
             UpdateColorArrow(1);
-            transform.position = currentPos;
+            transform.localPosition = currentPos;
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
         }
         else if (Input.GetKeyDown(KeyCode.S) && PlayerManager.instance.isLockD == false)
-        {
-            currentPos += Vector3.down;
+        {      
+            currentPos += Vector3.down;           
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180f));
-
             PlayerManager.instance.isLockU = true;
             PlayerManager.instance.isLockL = false;
             PlayerManager.instance.isLockR = false;
             PlayerManager.instance.isLockD = false;
             UpdateColorArrow(0);
-            transform.position = currentPos;
+            transform.localPosition = currentPos;
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
         }
         else if (Input.GetKeyDown(KeyCode.A) && PlayerManager.instance.isLockL == false)
@@ -153,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerManager.instance.isLockU = false;
             PlayerManager.instance.isLockL = false;
             UpdateColorArrow(2);
-            transform.position = currentPos;
+            transform.localPosition = currentPos;
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
         }
@@ -169,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerManager.instance.isLockU = false;
             PlayerManager.instance.isLockD = false;
             UpdateColorArrow(3);
-            transform.position = currentPos;
+            transform.localPosition = currentPos;
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
         }
 
