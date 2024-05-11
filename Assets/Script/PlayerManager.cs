@@ -9,6 +9,7 @@ public class PlayerManager : MonoBehaviour
     public playerStage currentPlayerStage;
     [Space]
     public List<Vector2> heroPosition = new List<Vector2>();
+    public List<float> heroRotation = new List<float>();
     public List<Transform> heroList = new List<Transform>();
   //  public List<Vector2> her = new List<Vector2>();
     public List<SpriteRenderer> heroSprite = new List<SpriteRenderer>();
@@ -16,6 +17,7 @@ public class PlayerManager : MonoBehaviour
     public int amountKilled;
     private SpriteRenderer heroFirst;
     public Transform playerDieTran;
+    public bool isLockU, isLockD, isLockR, isLockL;
     // Start is called before the first frame update
 
     private void Awake()
@@ -54,6 +56,7 @@ public class PlayerManager : MonoBehaviour
         for (int i = 0; i < childLength; i++)
         {
             heroPosition.Add(transform.GetChild(i).transform.position);
+            heroRotation.Add(transform.GetChild(i).transform.localRotation.eulerAngles.z);
             heroList.Add(transform.GetChild(i));
             heroSprite.Add(transform.GetChild(i).GetComponent<SpriteRenderer>());
             ScriptTurnONOFF(i);
@@ -64,18 +67,70 @@ public class PlayerManager : MonoBehaviour
     public void WhenMoveUpdatePostionTeam()
     {
         int childLength = this.transform.childCount - 1;
+        int childLength_2 = this.transform.childCount - 2;
         for (int i = 0; i < childLength; i++)
         {
             int SkipZero = i + 1;
             heroList[SkipZero].transform.position = heroPosition[i];
-
+           
+            heroList[SkipZero].transform.rotation = Quaternion.Euler(new Vector3(0, 0, heroList[0].transform.localRotation.eulerAngles.z));
         }
+     //   AlongRot();
         heroPosition[0] = heroList[0].transform.position;
+        heroRotation[0] = heroList[0].transform.localRotation.eulerAngles.z;
 
         //    //update last position
         UpdateNewPositionTeam();
     }
+    public void AlongRot()
+    {
+        int childLength = this.transform.childCount - 1;
+        int childLength_2 = this.transform.childCount - 2;
 
+        for (int i = 0; i < heroList.Count; i++)
+        {
+            int before = i - 1;
+            if (i == 0) { continue; }
+            if (heroList[0].transform.localRotation.eulerAngles.z == 180)//
+            {
+                if (heroList[i].transform.position.x != heroList[before].transform.position.x)
+                {
+                    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90f));
+                }
+            }
+            else if(heroList[0].transform.localRotation.eulerAngles.z == -180)
+            {
+                if (heroList[i].transform.position.x != heroList[before].transform.position.x)
+                {
+                    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90f));
+                }
+            }
+            else if (heroList[0].transform.localRotation.eulerAngles.z == 270)//
+            {
+                //if (heroList[i].transform.position.y != heroList[before].transform.position.y)
+                //{
+                //    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180f));
+                //}
+            }
+
+            else if (heroList[0].transform.localRotation.eulerAngles.z == 0)//
+            {
+                //    if (heroList[i].transform.position.x != heroList[before].transform.position.x)
+                //    {
+                //        heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90f));
+                //    }
+            }
+            else if (heroList[0].transform.localRotation.eulerAngles.z == 90)//
+            {
+                //if (heroList[i].transform.position.y != heroList[before].transform.position.y)
+                //{
+                //    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                //}
+             
+            }
+
+        }
+    }
     public void UpdateNewPositionTeam()
     {
         for (int i = 0; i < heroPosition.Count; i++)
@@ -110,6 +165,7 @@ public class PlayerManager : MonoBehaviour
         heroList = new List<Transform>();
         heroPosition = new List<Vector2>();
         heroSprite = new List<SpriteRenderer>();
+        heroRotation = new List<float>();
         GetData();
 
     }

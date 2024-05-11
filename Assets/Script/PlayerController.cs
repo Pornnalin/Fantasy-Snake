@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public Unit playerProfile;
- //   private GameMananger gameMananger;
-  //  private PlayerManager playerManager;
+    //   private GameMananger gameMananger;
+    //  private PlayerManager playerManager;
     private BattleSystems battleSystems;
     public int setNumber = 0;
     public bool isSetNumber = false;
@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         //gameMananger = FindAnyObjectByType<GameMananger>();
-     //   playerManager = FindAnyObjectByType<PlayerManager>();
+        //   playerManager = FindAnyObjectByType<PlayerManager>();
         battleSystems = FindAnyObjectByType<BattleSystems>();
         displayUI = FindAnyObjectByType<DisplayUI>();
         playerUI = FindAnyObjectByType<PlayerUI>();
@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
         playerProfile.attack = GameMananger.instance.statInfo.minPlayerAttack;
         playerProfile.health = GameMananger.instance.statInfo.minPlayerHeart;
 
-        
+
         //Debug.Log("SetDefault_Player" + name);
     }
 
@@ -41,7 +41,9 @@ public class PlayerController : MonoBehaviour
                 SwitchLastToFirst();
                 break;
         }
-      
+
+      //  Debug.Log(this.transform.localEulerAngles.z);
+        // Debug.Log(this.transform.localRotation.z);
 
         switch (battleSystems.state)
         {
@@ -113,7 +115,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("not right input!!!");
             }
         }
-      //  Debug.Log(setNumber);
+        //  Debug.Log(setNumber);
     }
     #endregion
 
@@ -234,7 +236,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GameMananger.instance.isGamePadDetect)
         {
-            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Gamepad.current.rightTrigger.wasPressedThisFrame) && !isEndAttack) 
+            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Gamepad.current.rightTrigger.wasPressedThisFrame) && !isEndAttack)
             {
                 isEndAttack = true;
                 StartCoroutine(battleSystems.PlayerTurnAttack());
@@ -254,14 +256,14 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Player_" + name + "Attack_" + battleSystems.monsterControl);
 
             }
-            else if (!Input.GetKeyDown(KeyCode.Space) && Input.anyKey) 
+            else if (!Input.GetKeyDown(KeyCode.Space) && Input.anyKey)
             {
                 Debug.Log("not right input!!!");
             }
 
         }
     }
-                
+
     #endregion
     private void SetBoolForSwitch(bool canPress, bool isSwtichL_To_F, bool isSwtichF_To_S)
     {
@@ -297,6 +299,39 @@ public class PlayerController : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             PlayerManager.instance.RemovePlayerDie();
+        }
+        if (collision.gameObject.CompareTag("Friend"))
+        {
+            int last = PlayerManager.instance.heroPosition.Count - 1;
+
+            collision.transform.SetParent(this.transform.root);
+            // Debug.Log(this.transform.localEulerAngles.z);
+            if (this.transform.localRotation.eulerAngles.z == 270f)
+            {
+                collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x - 1, PlayerManager.instance.heroPosition[last].y);
+            }
+            else if (this.transform.localRotation.eulerAngles.z == 180)
+            {
+                collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y + 1);
+            }
+            else if (this.transform.localRotation.eulerAngles.z == 90f)
+            {
+                collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x + 1, PlayerManager.instance.heroPosition[last].y);
+            }
+            else
+            {
+                collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y - 1);
+            }
+           
+            Debug.Log(collision.name);
+            PlayerManager.instance.heroList.Add(collision.transform);
+            PlayerManager.instance.heroPosition.Add(collision.transform.position);
+            PlayerManager.instance.heroSprite.Add(collision.GetComponent<SpriteRenderer>());
+            collision.tag = "Player";
+            collision.gameObject.layer= LayerMask.NameToLayer("Player");
+            collision.isTrigger = false;
+
+            Debug.Log("Found Friend");
         }
     }
 
