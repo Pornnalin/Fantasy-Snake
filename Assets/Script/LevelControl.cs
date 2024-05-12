@@ -6,7 +6,7 @@ using UnityEngine;
 public class LevelControl : MonoBehaviour
 {
     [SerializeField] float targetTime;
-    float time;
+    [SerializeField] float time;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +24,7 @@ public class LevelControl : MonoBehaviour
             {
                 time += Time.deltaTime;
 
-                Debug.Log(Mathf.Round(time));
+               // Debug.Log(Mathf.Round(time));//
             }
             else
             {
@@ -47,10 +47,12 @@ public class LevelControl : MonoBehaviour
             if (player.playerProfile.health < maxHealthP)
             {
                 player.playerProfile.health += 1;
+                Debug.Log("P_Health_lv+");
             }
             if (player.playerProfile.attack < maxAttackP)
             {
                 player.playerProfile.attack += 1;
+                Debug.Log("P_Att_lv+");
             }
         }
 
@@ -62,10 +64,13 @@ public class LevelControl : MonoBehaviour
                 if (monsterController.monsterProflie.health < maxHealthM)
                 {
                     monsterController.monsterProflie.health += 1;
+                     Debug.Log("M_Health_lv+");
                 }
                 if (monsterController.monsterProflie.attack < maxAttackM)
                 {
                     monsterController.monsterProflie.attack += 1;
+                    Debug.Log("M_Att_lv+");
+
                 }
 
             }

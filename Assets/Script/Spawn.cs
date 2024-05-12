@@ -69,7 +69,7 @@ public class Spawn : MonoBehaviour
     }
     private void StartSpawn()
     {
-        ShuffleList(setPostionSpawn);
+        //ShuffleList(setPostionSpawn);
         GameObject main = Instantiate(playerMainPrefab, Vector2.zero, Quaternion.identity);
         main.transform.SetParent(parentPlayer);
 
@@ -77,83 +77,33 @@ public class Spawn : MonoBehaviour
         //StartCoroutine(FirstMonster(2f, .5f));
         //StartCoroutine(WaitToSpawnObstacle(2.5f, GameMananger.instance.statInfo.startNumberObstacle, obstaclePrefab, false));
 
-        //for (int i = 0; i < setPostionSpawn.Count; i++)
-        //{
         for (int i = 0; i < GameMananger.instance.statInfo.startNumberPlayerChild; i++)
         {
-            Instantiate(monsterPrefab, setPostionSpawn[i], Quaternion.identity);
-            // Debug.Log(j);
+            GameObject playerAnother = Instantiate(playerChildPrefab, setPostionSpawn[i], Quaternion.identity);
+            PlayerManager.instance.heroNotInTeam.Add(playerAnother.transform);
         }
         int plusPlayer = GameMananger.instance.statInfo.startNumberPlayerChild;
         for (int j = 0; j < GameMananger.instance.statInfo.startNumberMonster; j++)
         {
-            Instantiate(monsterPrefab, setPostionSpawn[j + plusPlayer], Quaternion.identity);
-            // Debug.Log(j);
+            //Instantiate(monsterPrefab, setPostionSpawn[j + plusPlayer], Quaternion.identity);
+            GameObject monsAnother = Instantiate(monsterPrefab, setPostionSpawn[j + plusPlayer], Quaternion.identity);
+            MonsterManager.instance.monsList.Add(monsAnother.transform);
+            MonsterManager.instance.monsPosition.Add(monsAnother.transform.position);
+            Debug.Log("Spwan_New_" + monsAnother.name);
+
         }
         int plusPlayerPM = GameMananger.instance.statInfo.startNumberPlayerChild + GameMananger.instance.statInfo.startNumberMonster;
         for (int i = 0; i < GameMananger.instance.statInfo.startNumberObstacle; i++)
         {
-            Instantiate(obstaclePrefab, setPostionSpawn[i + plusPlayerPM], Quaternion.identity);
+            GameObject monsAnother = Instantiate(obstaclePrefab, setPostionSpawn[i + plusPlayerPM], Quaternion.identity);
+            MonsterManager.instance.monsList.Add(monsAnother.transform);
+            MonsterManager.instance.monsPosition.Add(monsAnother.transform.position);
+            Debug.Log("Spwan_New_" + monsAnother.name);
         }
-
+        //  can move
+        PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
+        Debug.Log("All_Character_Spawn");
     }
-
-
-
-    IEnumerator SpawnObjectChildPlayer(int amount, float time)
-    {
-        yield return new WaitForSeconds(time);
-        int _amount = amount;
-        Debug.Log(_amount);
-        int indexPlayerPosition = PlayerManager.instance.heroPosition.Count();
-        for (int i = 0; i < _amount; i++)
-        {
-            for (int j = 0; j < indexPlayerPosition; j++)
-            {
-                do
-                {
-                    RandomXY();
-                }
-                while (old.Contains(RandomXY()) && old.Contains(PlayerManager.instance.heroPosition[j]));
-                old.Add(RandomXY());
-            }
-            Instantiate(playerChildPrefab, RandomXY(), Quaternion.identity);
-
-        }
-
-        // isSpwan = false;
-        old = new List<Vector2>();
-        Debug.Log("Spwan_New_Friend");
-    }
-
-    IEnumerator FirstMonster(float time, float waitSpwanAgin)
-    {
-        yield return new WaitForSeconds(time);
-        for (int i = 0; i < PlayerManager.instance.heroPosition.Count; i++)
-        {
-            do
-            {
-                RandomXY();
-            }
-            while (old.Contains(RandomXY()) && old.Contains(PlayerManager.instance.heroPosition[i]));
-            old.Add(RandomXY());
-        }
-
-        GameObject mons = Instantiate(monsterPrefab, RandomXY(), Quaternion.identity);
-        MonsterManager.instance.monsList.Add(mons.transform);
-        MonsterManager.instance.monsPosition.Add(mons.transform.position);
-        Debug.Log("Spawn_First_Monster");
-        // yield return new WaitForSeconds(waitSpwanAgin);
-        if (GameMananger.instance.statInfo.startNumberMonster > 1)
-        {
-            SpwanNewCharacterOrObject(GameMananger.instance.statInfo.startNumberMonster - 1, monsterPrefab, false);
-        }
-        old = new List<Vector2>();
-
-
-
-    }
-
     public void SpwanNewCharacterOrObject(int whichNumberCharOrOb, GameObject prefab, bool isSpwanPlayer)
     {
         //int mix = MonsterManager.instance
@@ -164,12 +114,15 @@ public class Spawn : MonoBehaviour
             {
                 for (int k = 0; k < PlayerManager.instance.heroPosition.Count; k++)
                 {
-                    do
+                    for (int m = 0; m < PlayerManager.instance.heroNotInTeam.Count; m++)
                     {
-                        RandomXY();
+                        do
+                        {
+                            RandomXY();
+                        }
+                        while (old.Contains(RandomXY()) && old.Contains(PlayerManager.instance.heroPosition[k]) && old.Contains(MonsterManager.instance.monsPosition[j]) && old.Contains(PlayerManager.instance.heroNotInTeam[m].position));
+                        old.Add(RandomXY());
                     }
-                    while (old.Contains(RandomXY()) && old.Contains(PlayerManager.instance.heroPosition[k]) && old.Contains(MonsterManager.instance.monsPosition[j]));
-                    old.Add(RandomXY());
                 }
             }
             if (isSpwanPlayer)
@@ -191,16 +144,71 @@ public class Spawn : MonoBehaviour
         old = new List<Vector2>();
 
     }
-    IEnumerator WaitToSpawnObstacle(float time, int whichNumberMonsterOrOb, GameObject prefab, bool isSpwanPlayer)
-    {
-        yield return new WaitForSeconds(time);
-        SpwanNewCharacterOrObject(whichNumberMonsterOrOb, prefab, isSpwanPlayer);
-        yield return new WaitForSeconds(0.1f);
-        //can move
-        PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
-        Debug.Log("All_Character_Spawn");
+    //IEnumerator SpawnObjectChildPlayer(int amount, float time)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    int _amount = amount;
+    //    Debug.Log(_amount);
+    //    int indexPlayerPosition = PlayerManager.instance.heroPosition.Count();
+    //    for (int i = 0; i < _amount; i++)
+    //    {
+    //        for (int j = 0; j < indexPlayerPosition; j++)
+    //        {
+    //            do
+    //            {
+    //                RandomXY();
+    //            }
+    //            while (old.Contains(RandomXY()) && old.Contains(PlayerManager.instance.heroPosition[j]));
+    //            old.Add(RandomXY());
+    //        }
+    //        Instantiate(playerChildPrefab, RandomXY(), Quaternion.identity);
 
-    }
+    //    }
+
+    //    // isSpwan = false;
+    //    old = new List<Vector2>();
+    //    Debug.Log("Spwan_New_Friend");
+    //}
+
+    //IEnumerator FirstMonster(float time, float waitSpwanAgin)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    for (int i = 0; i < PlayerManager.instance.heroPosition.Count; i++)
+    //    {
+    //        do
+    //        {
+    //            RandomXY();
+    //        }
+    //        while (old.Contains(RandomXY()) && old.Contains(PlayerManager.instance.heroPosition[i]));
+    //        old.Add(RandomXY());
+    //    }
+
+    //    GameObject mons = Instantiate(monsterPrefab, RandomXY(), Quaternion.identity);
+    //    MonsterManager.instance.monsList.Add(mons.transform);
+    //    MonsterManager.instance.monsPosition.Add(mons.transform.position);
+    //    Debug.Log("Spawn_First_Monster");
+    //    // yield return new WaitForSeconds(waitSpwanAgin);
+    //    if (GameMananger.instance.statInfo.startNumberMonster > 1)
+    //    {
+    //        SpwanNewCharacterOrObject(GameMananger.instance.statInfo.startNumberMonster - 1, monsterPrefab, false);
+    //    }
+    //    old = new List<Vector2>();
+
+
+
+    //}
+
+   
+    //IEnumerator WaitToSpawnObstacle(float time, int whichNumberMonsterOrOb, GameObject prefab, bool isSpwanPlayer)
+    //{
+    //    yield return new WaitForSeconds(time);
+    //    SpwanNewCharacterOrObject(whichNumberMonsterOrOb, prefab, isSpwanPlayer);
+    //    yield return new WaitForSeconds(0.1f);
+    //    //can move
+    //    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
+    //    Debug.Log("All_Character_Spawn");
+
+    //}
 
     private void ShuffleList(List<Vector2> t)
     {
