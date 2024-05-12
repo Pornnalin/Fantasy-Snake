@@ -21,7 +21,7 @@ public class MonsterController : MonoBehaviour
     {
         if (monsterProflie.health <= 0)
         {
-            this.gameObject.SetActive(false);
+            Destroy(this.gameObject);
         }
        
     }

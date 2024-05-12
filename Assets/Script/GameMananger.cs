@@ -31,10 +31,11 @@ public class GameMananger : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        Debug.Log("prepearData");
     }
     void Start()
     {
-
+       
     }
 
     // Update is called once per frame
@@ -47,32 +48,13 @@ public class GameMananger : MonoBehaviour
     {
         int rand = Random.Range(statInfo.amountPlayerSpawanMin, statInfo.anmountPlayerSpawanMax);
 
-        //if (rand <= 40)
-        //{
-        //    //isPlayerSpwan = true;
-        //    amountPlayer = statInfo.anmountPlayerSpawanMax;
-        //}
-        //else if (rand >= 40 && rand <= 60)
-        //{
-        //    // isPlayerSpwan = false;
-        //    amountPlayer = statInfo.amountPlayerSpawanMin;
-        //}
         return rand;
     }
     public int ChanceSpawnMonster()
     {
         int rand = Random.Range(statInfo.amountMonsterSpawanMin, statInfo.amountMonsterSpawanMax);
 
-        //if (rand <= 40)
-        //{
-        //    //isPlayerSpwan = true;
-        //    amountPlayer = statInfo.anmountPlayerSpawanMax;
-        //}
-        //else if (rand >= 40 && rand <= 60)
-        //{
-        //    // isPlayerSpwan = false;
-        //    amountPlayer = statInfo.amountPlayerSpawanMin;
-        //}
+       
         return rand;
     }
 }
@@ -89,10 +71,10 @@ public class StatInfo
     [Range(1, 5)]
     public int startNumberObstacle;
     [Space]
-    [Range(1, 25), Tooltip("min =1,max=25")]
+    [Range(1, 10), Tooltip("min =1,max=10")]
     public int minPlayerAttack, maxPlayerAttack, minMonsterAttack, maxMonsterrAttack;
     [Space]
-    [Range(1, 10), Tooltip("min =1,max=10")]
+    [Range(1, 20), Tooltip("min =1,max=20")]
     public int minPlayerHeart, maxPlayerHeart, minMonsterHeart, maxMonsterHeart;
     [Space]
     [Range(0.1f, 2), Tooltip("min =0.1f,max=2")]

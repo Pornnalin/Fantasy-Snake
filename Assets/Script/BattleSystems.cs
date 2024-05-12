@@ -29,15 +29,7 @@ public class BattleSystems : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void RandomNumber()
-    {
-        if (!isRand)
-        {
-            isRand = true;
-            int _rand = Random.Range(1, 3);
-            rand = _rand;
-        }
-    }
+
     private void Update()
     {
      
@@ -48,9 +40,11 @@ public class BattleSystems : MonoBehaviour
             case battleStage.RANDOM:
                 break;
             case battleStage.PLAYERTURN:
+
                 UpdatePlayerText();
                 displayUI.playerArrowGroup.SetActive(true);
                 displayUI.monsArrowGroup.SetActive(false);
+
                 break;
             case battleStage.MONSTERTURN:
 
@@ -63,18 +57,10 @@ public class BattleSystems : MonoBehaviour
                     StartCoroutine(MonsterTurnAttack());
                 }
                 break;
+
             case battleStage.WON:
-                displayUI.playerBattleUI.SetActive(false);
-                displayUI.monsBattleUI.SetActive(false);
-                if (!spawn.isSpwan)
-                {
-                    spawn.isSpwan = true;
-                    //spawn monster or trap
-                    spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnMonster(), spawn.monsterPrefab, false);
-                   // spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnMonster(), spawn.obstaclePrefab, false);
-                }
-                state = battleStage.NONE;
-                PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
+                StartCoroutine(SpawnNewMonster());
+
                 break;
             case battleStage.LOST:
                 if (PlayerManager.instance.heroList.Count == 1)
@@ -84,6 +70,15 @@ public class BattleSystems : MonoBehaviour
                 break;
         }
     }
+    private void RandomNumber()
+    {
+        if (!isRand)
+        {
+            isRand = true;
+            int _rand = Random.Range(1, 3);
+            rand = _rand;
+        }
+    }
     public IEnumerator FuncDisplayUIAndChangeState()
     {
         //  displayUI.oddOrEvenHead.SetActive(true);
@@ -91,6 +86,7 @@ public class BattleSystems : MonoBehaviour
         displayUI.numberText.text = rand.ToString();
         displayUI.result.SetActive(true);
         displayUI.uiOddEven.SetActive(false);
+
 
 
         if (playerControl.setNumber.Equals(rand))
@@ -109,11 +105,17 @@ public class BattleSystems : MonoBehaviour
 
         yield return new WaitForSeconds(2.5f);
         displayUI.oddOrEvenHead.SetActive(false);
+        displayUI.result.SetActive(false);
+        displayUI.uiOddEven.SetActive(true);
+
         isRand = false;
+
         Debug.Log("oddOrEvenHead_Close");
+
         state = playerControl.isMyTurn ? battleStage.PLAYERTURN : battleStage.MONSTERTURN;
         displayUI.playerBattleUI.SetActive(true);
         displayUI.monsBattleUI.SetActive(true);
+        rand = -1;
         Debug.Log("CurrentState" + state);
 
     }
@@ -164,7 +166,7 @@ public class BattleSystems : MonoBehaviour
 
     IEnumerator MonsterTurnAttack()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         if (playerControl.playerProfile.health > 0)
         {
             playerControl.playerProfile.health -= monsterControl.monsterProflie.attack;
@@ -183,7 +185,7 @@ public class BattleSystems : MonoBehaviour
 
                 if (PlayerManager.instance.heroList.Count > 1)
                 {
-                    StartCoroutine(Wait());
+                    StartCoroutine(WaitContinue());
 
                 }
                 else
@@ -204,7 +206,7 @@ public class BattleSystems : MonoBehaviour
 
         }
     }
-    IEnumerator Wait()
+    IEnumerator WaitContinue()
     {
         isPlayerContinue = true;
 
@@ -216,5 +218,23 @@ public class BattleSystems : MonoBehaviour
         yield return new WaitForSeconds(2f);
         isPlayerContinue = false;
 
+    }
+    IEnumerator SpawnNewMonster()
+    {
+        displayUI.playerBattleUI.SetActive(false);
+        displayUI.monsBattleUI.SetActive(false);
+
+        if (!spawn.isSpwan)
+        {
+            spawn.isSpwan = true;
+            //spawn monster or trap
+            spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnMonster(), spawn.monsterPrefab, false);
+            playerControl.isSetNumber = false;
+
+        }
+        yield return new WaitForSeconds(0.2f);
+        spawn.isSpwan = false;
+        state = battleStage.NONE;
+        PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
     }
 }

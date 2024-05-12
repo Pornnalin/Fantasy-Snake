@@ -5,14 +5,14 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager instance;
-    public enum playerStage { NONE,MOVE, BATTLE, GAMEOVER }
+    public enum playerStage { NONE, MOVE, BATTLE, GAMEOVER }
     public playerStage currentPlayerStage;
     [Space]
     public List<Vector2> heroPosition = new List<Vector2>();
     public List<float> heroRotation = new List<float>();
     public List<Transform> heroList = new List<Transform>();
     public List<Transform> heroNotInTeam = new List<Transform>();
-  //  public List<Vector2> her = new List<Vector2>();
+    //  public List<Vector2> her = new List<Vector2>();
     public List<SpriteRenderer> heroSprite = new List<SpriteRenderer>();
     [Space]
     public int amountKilled;
@@ -48,8 +48,11 @@ public class PlayerManager : MonoBehaviour
             case playerStage.BATTLE:
                 break;
             case playerStage.GAMEOVER:
+
                 displayUI.resetPanel.SetActive(true);
-                //dis
+                displayUI.monsBattleUI.SetActive(false);
+                displayUI.playerBattleUI.SetActive(false);
+                displayUI.amountKill.text = amountKilled.ToString();
                 break;
         }
 
@@ -86,10 +89,10 @@ public class PlayerManager : MonoBehaviour
         {
             int SkipZero = i + 1;
             heroList[SkipZero].transform.position = heroPosition[i];
-           
+
             heroList[SkipZero].transform.rotation = Quaternion.Euler(new Vector3(0, 0, heroList[0].transform.localRotation.eulerAngles.z));
         }
-     //   AlongRot();
+        //   AlongRot();
         heroPosition[0] = heroList[0].transform.position;
         heroRotation[0] = heroList[0].transform.localRotation.eulerAngles.z;
 
@@ -112,7 +115,7 @@ public class PlayerManager : MonoBehaviour
                     heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90f));
                 }
             }
-            else if(heroList[0].transform.localRotation.eulerAngles.z == -180)
+            else if (heroList[0].transform.localRotation.eulerAngles.z == -180)
             {
                 if (heroList[i].transform.position.x != heroList[before].transform.position.x)
                 {
@@ -140,7 +143,7 @@ public class PlayerManager : MonoBehaviour
                 //{
                 //    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                 //}
-             
+
             }
 
         }
@@ -201,8 +204,7 @@ public class PlayerManager : MonoBehaviour
 
     }
     public void RemovePlayerDie()
-    {    
-
+    {
         List<Vector2> originPos = new List<Vector2>(heroPosition);
         List<Vector2> copy = new List<Vector2>();
         int lastIndex = originPos.Count - 1;
@@ -220,12 +222,13 @@ public class PlayerManager : MonoBehaviour
         {
             heroPosition.Add(item);
         }
-        
+
         heroList[0].gameObject.SetActive(false);
         GameObject move = heroList[0].gameObject;
         move.transform.SetParent(playerDieTran);
         Debug.Log(move.name + "___Die");
         heroList.RemoveAt(0);
+      //  Destroy(heroList[0].gameObject);
 
         for (int i = 0; i < heroList.Count; i++)
         {

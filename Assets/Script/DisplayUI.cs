@@ -24,6 +24,7 @@ public class DisplayUI : MonoBehaviour
 
     [Space]
     public GameObject resetPanel;
+    public TextMeshProUGUI amountKill;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +35,5 @@ public class DisplayUI : MonoBehaviour
         playerBattleUI.SetActive(false);
         resetPanel.SetActive(false);
     }
-
-    // Update is called once per frame
  
 }

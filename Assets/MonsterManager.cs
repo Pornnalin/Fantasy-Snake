@@ -20,10 +20,7 @@ public class MonsterManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    public void GetData()
-    {
-        
-    }
+  
     // Update is called once per frame
     void Update()
     {

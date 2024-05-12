@@ -50,6 +50,7 @@ public class Spawn : MonoBehaviour
         //SpawnFloor();
         //  Area();
         StartSpawn();
+
     }
     private void Awake()
     {
@@ -69,7 +70,6 @@ public class Spawn : MonoBehaviour
         StartCoroutine(SpawnObjectChildPlayer(GameMananger.instance.statInfo.startNumberPlayerChild, 1.5f));
         StartCoroutine(FirstMonster(2f, .5f));
         StartCoroutine(WaitToSpawnObstacle(2.5f, GameMananger.instance.statInfo.startNumberObstacle, obstaclePrefab, false));
-       
     }
 
     IEnumerator SpawnObjectChildPlayer(int amount, float time)
@@ -100,7 +100,7 @@ public class Spawn : MonoBehaviour
 
     IEnumerator FirstMonster(float time, float waitSpwanAgin)
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(time);
         for (int i = 0; i < PlayerManager.instance.heroPosition.Count; i++)
         {
             do
@@ -110,14 +110,16 @@ public class Spawn : MonoBehaviour
             while (old.Contains(RandomXY()) && old.Contains(PlayerManager.instance.heroPosition[i]));
             old.Add(RandomXY());
         }
-        GameObject mons = Instantiate(monsterPrefab, RandomXY(), Quaternion.identity);
-        //MonsterManager.instance.monsList = new List<Transform>();
+
+        GameObject mons = Instantiate(monsterPrefab, RandomXY(), Quaternion.identity);       
         MonsterManager.instance.monsList.Add(mons.transform);
         MonsterManager.instance.monsPosition.Add(mons.transform.position);
-
-        yield return new WaitForSeconds(waitSpwanAgin);
-
-        SpwanNewCharacterOrObject(GameMananger.instance.statInfo.startNumberMonster, monsterPrefab, false);
+        Debug.Log("Spawn_First_Monster");
+        // yield return new WaitForSeconds(waitSpwanAgin);
+        if (GameMananger.instance.statInfo.startNumberMonster > 1)
+        {
+            SpwanNewCharacterOrObject(GameMananger.instance.statInfo.startNumberMonster - 1, monsterPrefab, false);
+        }
         old = new List<Vector2>();
 
 
@@ -168,6 +170,7 @@ public class Spawn : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         //can move
         PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
+        Debug.Log("All_Character_Spawn");
 
     }
 
