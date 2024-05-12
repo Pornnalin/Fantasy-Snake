@@ -5,32 +5,23 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public Unit playerProfile;
-    //   private GameMananger gameMananger;
-    //  private PlayerManager playerManager;
+    public Unit playerProfile;   
     private BattleSystems battleSystems;
     public int setNumber = 0;
     public bool isSetNumber = false;
     public bool isMyTurn;
     public bool isEndAttack;
     private DisplayUI displayUI;
-    private PlayerUI playerUI;
-    private Spawn spawn;
+      private Spawn spawn;
     // Start is called before the first frame update
     void Start()
-    {       
+    {
         battleSystems = FindAnyObjectByType<BattleSystems>();
         displayUI = FindAnyObjectByType<DisplayUI>();
         spawn = FindAnyObjectByType<Spawn>();
-        playerUI = FindAnyObjectByType<PlayerUI>();
-
         playerProfile.attack = GameMananger.instance.statInfo.minPlayerAttack;
-        playerProfile.health = GameMananger.instance.statInfo.minPlayerHeart;
+        playerProfile.health = GameMananger.instance.statInfo.minPlayerHeart;       
 
-        SpriteRenderer sprite = this.GetComponent<SpriteRenderer>();
-        Color _color = new Color(Random.value, Random.value, Random.value);
-        sprite.color = _color;
-        //Debug.Log("SetDefault_Player" + name);
     }
 
     // Update is called once per frame
