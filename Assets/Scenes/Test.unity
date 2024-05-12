@@ -1862,6 +1862,10 @@ MonoBehaviour:
   descriptionBad: TOO BAD...
   monsterControl: {fileID: 0}
   playerControl: {fileID: 0}
+  duration: 2
+  strength: 0.1
+  min: -1
+  max: 1
   isPlayerContinue: 0
 --- !u!4 &132732209
 Transform:
@@ -17439,7 +17443,7 @@ MonoBehaviour:
     maxPlayerAttack: 8
     minMonsterAttack: 1
     maxMonsterrAttack: 10
-    minPlayerHeart: 2
+    minPlayerHeart: 3
     maxPlayerHeart: 10
     minMonsterHeart: 2
     maxMonsterHeart: 10

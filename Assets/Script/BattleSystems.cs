@@ -15,15 +15,16 @@ public class BattleSystems : MonoBehaviour
     private DisplayUI displayUI;
     public MonsterController monsterControl;
     public PlayerController playerControl;
-   // public PlayerManager playerManager;
-  //  private GameMananger gameMananger;
+    public float duration = 0.2f, strength = 0.3f, min = 0.1f, max = 1f;
+
     public bool isPlayerContinue = false;
     private Spawn spawn;
+    private bool canShake = false;
     // Start is called before the first frame update
     void Start()
     {
         state = battleStage.NONE;
-      //  playerManager = FindAnyObjectByType<PlayerManager>();
+        //  playerManager = FindAnyObjectByType<PlayerManager>();
         displayUI = FindAnyObjectByType<DisplayUI>();
         spawn = FindAnyObjectByType<Spawn>();
     }
@@ -32,7 +33,7 @@ public class BattleSystems : MonoBehaviour
 
     private void Update()
     {
-     
+
         switch (state)
         {
             case battleStage.NONE:
@@ -65,10 +66,11 @@ public class BattleSystems : MonoBehaviour
             case battleStage.LOST:
                 if (PlayerManager.instance.heroList.Count == 1)
                 {
-                    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;                    
+                    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
                 }
                 break;
         }
+
     }
     private void RandomNumber()
     {
@@ -141,8 +143,11 @@ public class BattleSystems : MonoBehaviour
         {
             monsterControl.monsterProflie.health -= playerControl.playerProfile.attack;
             Debug.Log("Player_Hit_Monster!!");
-
-            yield return new WaitForSeconds(1f);
+            monsterControl.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(0.5f);
+            monsterControl.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+            //  StartCoroutine(Shake(monsterControl.transform.position));
+            yield return new WaitForSeconds(.5f);
 
             if (monsterControl.monsterProflie.health > 0)
             {
@@ -171,8 +176,10 @@ public class BattleSystems : MonoBehaviour
         {
             playerControl.playerProfile.health -= monsterControl.monsterProflie.attack;
             Debug.Log("Monster_Hit_ME!!");
-
-            yield return new WaitForSeconds(1f);
+            playerControl.GetComponent<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(0.5f);
+            playerControl.GetComponent<SpriteRenderer>().color = Color.white;
+            yield return new WaitForSeconds(.5f);
 
             if (playerControl.playerProfile.health > 0)
             {
@@ -199,7 +206,7 @@ public class BattleSystems : MonoBehaviour
         }
         else
         {
-          
+
             state = battleStage.LOST;
             isMonsAttack = false;
 
@@ -238,3 +245,5 @@ public class BattleSystems : MonoBehaviour
         PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
     }
 }
+
+   

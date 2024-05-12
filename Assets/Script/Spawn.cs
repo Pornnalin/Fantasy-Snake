@@ -80,6 +80,7 @@ public class Spawn : MonoBehaviour
         for (int i = 0; i < GameMananger.instance.statInfo.startNumberPlayerChild; i++)
         {
             GameObject playerAnother = Instantiate(playerChildPrefab, setPostionSpawn[i], Quaternion.identity);
+            playerAnother.name = playerChildPrefab.name + "_" + i;
             PlayerManager.instance.heroNotInTeam.Add(playerAnother.transform);
         }
         int plusPlayer = GameMananger.instance.statInfo.startNumberPlayerChild;
@@ -87,6 +88,7 @@ public class Spawn : MonoBehaviour
         {
             //Instantiate(monsterPrefab, setPostionSpawn[j + plusPlayer], Quaternion.identity);
             GameObject monsAnother = Instantiate(monsterPrefab, setPostionSpawn[j + plusPlayer], Quaternion.identity);
+            monsAnother.name = monsterPrefab.name + "_" + j;
             MonsterManager.instance.monsList.Add(monsAnother.transform);
             MonsterManager.instance.monsPosition.Add(monsAnother.transform.position);
             Debug.Log("Spwan_New_" + monsAnother.name);
@@ -96,6 +98,7 @@ public class Spawn : MonoBehaviour
         for (int i = 0; i < GameMananger.instance.statInfo.startNumberObstacle; i++)
         {
             GameObject monsAnother = Instantiate(obstaclePrefab, setPostionSpawn[i + plusPlayerPM], Quaternion.identity);
+            monsAnother.name = obstaclePrefab.name + "_" + i;
             MonsterManager.instance.monsList.Add(monsAnother.transform);
             MonsterManager.instance.monsPosition.Add(monsAnother.transform.position);
             Debug.Log("Spwan_New_" + monsAnother.name);
@@ -128,6 +131,7 @@ public class Spawn : MonoBehaviour
             if (isSpwanPlayer)
             {
                 GameObject playerAnother = Instantiate(prefab, RandomXY(), Quaternion.identity);
+                playerAnother.name = prefab.name + "_" + i;
                 PlayerManager.instance.heroNotInTeam.Add(playerAnother.transform);
                 Debug.Log("Spwan_New_" + playerAnother.name);
 
@@ -135,6 +139,7 @@ public class Spawn : MonoBehaviour
             else
             {
                 GameObject monsAnother = Instantiate(prefab, RandomXY(), Quaternion.identity);
+                monsAnother.name = prefab.name + "_" + i;
                 MonsterManager.instance.monsList.Add(monsAnother.transform);
                 MonsterManager.instance.monsPosition.Add(monsAnother.transform.position);
                 Debug.Log("Spwan_New_" + monsAnother.name);

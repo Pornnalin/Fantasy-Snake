@@ -52,6 +52,7 @@ public class PlayerManager : MonoBehaviour
                 displayUI.resetPanel.SetActive(true);
                 displayUI.monsBattleUI.SetActive(false);
                 displayUI.playerBattleUI.SetActive(false);
+                displayUI.oddOrEvenHead.SetActive(false);
                 displayUI.amountKill.text = amountKilled.ToString();
                 break;
         }

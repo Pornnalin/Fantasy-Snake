@@ -5,14 +5,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public Unit playerProfile;   
+    public Unit playerProfile;
     private BattleSystems battleSystems;
     public int setNumber = 0;
     public bool isSetNumber = false;
     public bool isMyTurn;
     public bool isEndAttack;
     private DisplayUI displayUI;
-      private Spawn spawn;
+    private Spawn spawn;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
         displayUI = FindAnyObjectByType<DisplayUI>();
         spawn = FindAnyObjectByType<Spawn>();
         playerProfile.attack = GameMananger.instance.statInfo.minPlayerAttack;
-        playerProfile.health = GameMananger.instance.statInfo.minPlayerHeart;       
+        playerProfile.health = GameMananger.instance.statInfo.minPlayerHeart;
 
     }
 
@@ -33,14 +33,15 @@ public class PlayerController : MonoBehaviour
         switch (PlayerManager.instance.currentPlayerStage)
         {
             case PlayerManager.playerStage.MOVE:
-                SwitchFirstToSecond();
-                SwitchLastToFirst();
+
+                if (PlayerManager.instance.heroList.Count > 2)
+                {
+                    SwitchFirstToSecond();
+                    SwitchLastToFirst();
+                }
+
                 break;
         }
-
-        //  Debug.Log(this.transform.localEulerAngles.z);
-        // Debug.Log(this.transform.localRotation.z);
-
         switch (battleSystems.state)
         {
             case BattleSystems.battleStage.NONE:
@@ -53,11 +54,10 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             case BattleSystems.battleStage.PLAYERTURN:
-                // PlayerManager.instance.ManageStatUI();
                 InputAttack();
                 break;
             case BattleSystems.battleStage.MONSTERTURN:
-                //  PlayerManager.instance.ManageStatUI();
+
 
                 break;
             case BattleSystems.battleStage.WON:
@@ -232,7 +232,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GameMananger.instance.isGamePadDetect)
         {
-            if ((Input.GetKeyDown(KeyCode.KeypadEnter) || Gamepad.current.rightTrigger.wasPressedThisFrame) && !isEndAttack)
+            if ((Input.GetKeyDown(KeyCode.Return) || Gamepad.current.rightTrigger.wasPressedThisFrame) && !isEndAttack)
             {
                 isEndAttack = true;
                 StartCoroutine(battleSystems.PlayerTurnAttack());
@@ -329,7 +329,7 @@ public class PlayerController : MonoBehaviour
             collision.isTrigger = false;
 
             Debug.Log("Found Friend");
-           // Debug.Log(GameMananger.instance.ChanceSpawnPlayer());
+            // Debug.Log(GameMananger.instance.ChanceSpawnPlayer());
             //  StartCoroutine(spawn.SpwanNewCharacterOrObject()));
             spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnPlayer(), spawn.playerChildPrefab, true);
 
@@ -350,5 +350,7 @@ public class PlayerController : MonoBehaviour
         MonsterController _monster = collision.transform.parent.parent.GetComponent<MonsterController>();
         battleSystems.monsterControl = _monster;
     }
+
+ 
 }
 
