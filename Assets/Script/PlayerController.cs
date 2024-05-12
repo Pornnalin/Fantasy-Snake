@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        displayUI.UpdateColor(GameMananger.instance.isGamePadDetect ? Color.white : Color.gray);
+
         switch (PlayerManager.instance.currentPlayerStage)
         {
             case PlayerManager.playerStage.MOVE:
@@ -44,7 +47,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-      //  Debug.Log(this.transform.localEulerAngles.z);
+        //  Debug.Log(this.transform.localEulerAngles.z);
         // Debug.Log(this.transform.localRotation.z);
 
         switch (battleSystems.state)
@@ -59,11 +62,11 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             case BattleSystems.battleStage.PLAYERTURN:
-               // PlayerManager.instance.ManageStatUI();
+                // PlayerManager.instance.ManageStatUI();
                 InputAttack();
                 break;
             case BattleSystems.battleStage.MONSTERTURN:
-              //  PlayerManager.instance.ManageStatUI();
+                //  PlayerManager.instance.ManageStatUI();
 
                 break;
             case BattleSystems.battleStage.WON:

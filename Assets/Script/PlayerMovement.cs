@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerManager.instance.isLockL = false;
             PlayerManager.instance.isLockR = false;
             PlayerManager.instance.isLockU = false;
-            UpdateColorArrow(1);
+           // UpdateColorArrow(1);
             transform.localPosition = currentPos;
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
@@ -138,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerManager.instance.isLockL = false;
             PlayerManager.instance.isLockR = false;
             PlayerManager.instance.isLockD = false;
-            UpdateColorArrow(0);
+           // UpdateColorArrow(0);
             transform.localPosition = currentPos;
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
         }
@@ -153,7 +153,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerManager.instance.isLockD = false;
             PlayerManager.instance.isLockU = false;
             PlayerManager.instance.isLockL = false;
-            UpdateColorArrow(2);
+           // UpdateColorArrow(2);
             transform.localPosition = currentPos;
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
@@ -169,20 +169,20 @@ public class PlayerMovement : MonoBehaviour
             PlayerManager.instance.isLockR = false;
             PlayerManager.instance.isLockU = false;
             PlayerManager.instance.isLockD = false;
-            UpdateColorArrow(3);
+           // UpdateColorArrow(3);
             transform.localPosition = currentPos;
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
         }
 
     }
 
-    private void UpdateColorArrow(int indexDisable)
-    {
-        for (int i = 0; i < arrow.Length; i++)
-        {
-            arrow[i].color = i == indexDisable ? colorDisable : colorEnable;
-        }
-    }
+    //private void UpdateColorArrow(int indexDisable)
+    //{
+    //    for (int i = 0; i < arrow.Length; i++)
+    //    {
+    //        arrow[i].color = i == indexDisable ? colorDisable : colorEnable;
+    //    }
+    //}
     public void CheckPlayerMove()
     {
         for (int i = 0; i < PlayerManager.instance.heroList.Count; i++)

@@ -28,11 +28,13 @@ public class Spawn : MonoBehaviour
     public bool isSpwan = false;
     // private GameObject gg;
     [SerializeField] private List<Vector2> old;
+    [SerializeField] private List<Vector2> setPostionSpawn;
 
     [ContextMenu("DebugPositionArea")]
     public void Area()
     {
         Vector2 vec = new Vector2();
+        setPostionSpawn = new List<Vector2>();
         for (int i = 0; i < row; i++)
         {
             var xPod = startPos.position.x + i;
@@ -40,10 +42,13 @@ public class Spawn : MonoBehaviour
             {
                 var YPod = startPos.position.y - j;
                 vec = new Vector2(xPod, YPod);
-                Instantiate(Resources.Load<GameObject>("Prefab/Floor"), vec, Quaternion.identity);
+                //GameObject game = Instantiate(Resources.Load<GameObject>("Prefab/Floor"), vec, Quaternion.identity);
+                setPostionSpawn.Add(vec);
+
                 Debug.Log(vec);
             }
         }
+        ShuffleList(setPostionSpawn);
     }
     private void Start()
     {
@@ -64,13 +69,36 @@ public class Spawn : MonoBehaviour
     }
     private void StartSpawn()
     {
+        ShuffleList(setPostionSpawn);
         GameObject main = Instantiate(playerMainPrefab, Vector2.zero, Quaternion.identity);
         main.transform.SetParent(parentPlayer);
-        // Invoke(nameof(WaitToPlayerFirstSpawn), 1f);
-        StartCoroutine(SpawnObjectChildPlayer(GameMananger.instance.statInfo.startNumberPlayerChild, 1.5f));
-        StartCoroutine(FirstMonster(2f, .5f));
-        StartCoroutine(WaitToSpawnObstacle(2.5f, GameMananger.instance.statInfo.startNumberObstacle, obstaclePrefab, false));
+
+        //StartCoroutine(SpawnObjectChildPlayer(GameMananger.instance.statInfo.startNumberPlayerChild, 1.5f));
+        //StartCoroutine(FirstMonster(2f, .5f));
+        //StartCoroutine(WaitToSpawnObstacle(2.5f, GameMananger.instance.statInfo.startNumberObstacle, obstaclePrefab, false));
+
+        //for (int i = 0; i < setPostionSpawn.Count; i++)
+        //{
+        for (int i = 0; i < GameMananger.instance.statInfo.startNumberPlayerChild; i++)
+        {
+            Instantiate(monsterPrefab, setPostionSpawn[i], Quaternion.identity);
+            // Debug.Log(j);
+        }
+        int plusPlayer = GameMananger.instance.statInfo.startNumberPlayerChild;
+        for (int j = 0; j < GameMananger.instance.statInfo.startNumberMonster; j++)
+        {
+            Instantiate(monsterPrefab, setPostionSpawn[j + plusPlayer], Quaternion.identity);
+            // Debug.Log(j);
+        }
+        int plusPlayerPM = GameMananger.instance.statInfo.startNumberPlayerChild + GameMananger.instance.statInfo.startNumberMonster;
+        for (int i = 0; i < GameMananger.instance.statInfo.startNumberObstacle; i++)
+        {
+            Instantiate(obstaclePrefab, setPostionSpawn[i + plusPlayerPM], Quaternion.identity);
+        }
+
     }
+
+
 
     IEnumerator SpawnObjectChildPlayer(int amount, float time)
     {
@@ -111,7 +139,7 @@ public class Spawn : MonoBehaviour
             old.Add(RandomXY());
         }
 
-        GameObject mons = Instantiate(monsterPrefab, RandomXY(), Quaternion.identity);       
+        GameObject mons = Instantiate(monsterPrefab, RandomXY(), Quaternion.identity);
         MonsterManager.instance.monsList.Add(mons.transform);
         MonsterManager.instance.monsPosition.Add(mons.transform.position);
         Debug.Log("Spawn_First_Monster");
@@ -174,7 +202,18 @@ public class Spawn : MonoBehaviour
 
     }
 
+    private void ShuffleList(List<Vector2> t)
+    {
+        for (int i = 0; i < t.Count - 1; i++)
+        {
+            var temp = t[i];
+            int rand = Random.Range(i, t.Count);
+            t[i] = t[rand];
+            t[rand] = temp;
+        }
 
+       // Debug.Log("<color=yellow>ShuffleList</color>");
+    }
 
 
     // Update is called once per frame

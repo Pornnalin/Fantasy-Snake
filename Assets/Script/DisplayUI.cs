@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class DisplayUI : MonoBehaviour
 {
@@ -25,7 +26,10 @@ public class DisplayUI : MonoBehaviour
     [Space]
     public GameObject resetPanel;
     public TextMeshProUGUI amountKill;
-
+    [Space]
+    [Header("GamepadUI")]
+    public Image[] RT;
+    public Image LT;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,5 +39,17 @@ public class DisplayUI : MonoBehaviour
         playerBattleUI.SetActive(false);
         resetPanel.SetActive(false);
     }
- 
+    private void Update()
+    {
+       // UpdateColor();
+    }
+
+    public void UpdateColor(Color newColor)
+    {
+        for (int i = 0; i < RT.Length; i++)
+        {
+            RT[i].color = newColor;
+        }
+        LT.color = newColor;
+    }
 }

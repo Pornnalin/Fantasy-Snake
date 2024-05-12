@@ -76,9 +76,8 @@ public class StatInfo
     [Space]
     [Range(1, 20), Tooltip("min =1,max=20")]
     public int minPlayerHeart, maxPlayerHeart, minMonsterHeart, maxMonsterHeart;
-    [Space]
-    [Range(0.1f, 2), Tooltip("min =0.1f,max=2")]
-    public float growing;    
+    [Space]    
+    public float growing;
     [Space]
     [Tooltip("chance")]
     [Range(1, 5)]
