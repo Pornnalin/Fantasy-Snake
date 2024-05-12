@@ -5,17 +5,19 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager instance;
-    public enum playerStage { MOVE, BATTLE, GAMEOVER }
+    public enum playerStage { NONE,MOVE, BATTLE, GAMEOVER }
     public playerStage currentPlayerStage;
     [Space]
     public List<Vector2> heroPosition = new List<Vector2>();
     public List<float> heroRotation = new List<float>();
     public List<Transform> heroList = new List<Transform>();
+    public List<Transform> heroNotInTeam = new List<Transform>();
   //  public List<Vector2> her = new List<Vector2>();
     public List<SpriteRenderer> heroSprite = new List<SpriteRenderer>();
     [Space]
     public int amountKilled;
     private SpriteRenderer heroFirst;
+    private DisplayUI displayUI;
     public Transform playerDieTran;
     public bool isLockU, isLockD, isLockR, isLockL;
     // Start is called before the first frame update
@@ -30,15 +32,26 @@ public class PlayerManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+        currentPlayerStage = playerStage.NONE;
     }
     void Start()
     {
         GetData();
-        currentPlayerStage = playerStage.MOVE;
+        displayUI = FindAnyObjectByType<DisplayUI>();
     }
     private void Update()
     {
-        //  FlipXAllHero();
+        switch (currentPlayerStage)
+        {
+            case playerStage.MOVE:
+                break;
+            case playerStage.BATTLE:
+                break;
+            case playerStage.GAMEOVER:
+                displayUI.resetPanel.SetActive(true);
+                //dis
+                break;
+        }
 
     }
 
@@ -50,7 +63,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    private void GetData()
+    public void GetData()
     {
         int childLength = this.transform.childCount;
         for (int i = 0; i < childLength; i++)
@@ -64,6 +77,7 @@ public class PlayerManager : MonoBehaviour
         }
         heroFirst = heroList[0].GetComponent<SpriteRenderer>();
     }
+
     public void WhenMoveUpdatePostionTeam()
     {
         int childLength = this.transform.childCount - 1;

@@ -22,6 +22,8 @@ public class DisplayUI : MonoBehaviour
     public TextMeshProUGUI monsterAttackText;
     public GameObject monsArrowGroup;
 
+    [Space]
+    public GameObject resetPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +32,7 @@ public class DisplayUI : MonoBehaviour
         result.SetActive(false);
         monsBattleUI.SetActive(false);
         playerBattleUI.SetActive(false);
+        resetPanel.SetActive(false);
     }
 
     // Update is called once per frame

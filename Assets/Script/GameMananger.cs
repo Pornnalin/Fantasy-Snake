@@ -17,6 +17,9 @@ public class GameMananger : MonoBehaviour
     [Space]
     [Header("Spawn")]
     public bool isPlayerSpwan;
+    int amountPlayer;
+    int amountMonster;
+    public bool isSpwanDone = false;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -40,47 +43,51 @@ public class GameMananger : MonoBehaviour
         isGamePadDetect = Gamepad.current == null ? false : true;
 
     }
-    [ContextMenu("testChance")]
-    public void ChanceSpawn()
+    public int ChanceSpawnPlayer()
     {
-        int a = Random.Range(0, 101);
-        if (a <= statInfo.chancePlayer)
-        {
-            isPlayerSpwan = true;
-        }
-        else if (a >= statInfo.chancePlayer && a <= statInfo.chanceMonster)
-        {
-            isPlayerSpwan = false;
+        int rand = Random.Range(statInfo.amountPlayerSpawanMin, statInfo.anmountPlayerSpawanMax);
 
-        }
-        Debug.Log(a);
+        //if (rand <= 40)
+        //{
+        //    //isPlayerSpwan = true;
+        //    amountPlayer = statInfo.anmountPlayerSpawanMax;
+        //}
+        //else if (rand >= 40 && rand <= 60)
+        //{
+        //    // isPlayerSpwan = false;
+        //    amountPlayer = statInfo.amountPlayerSpawanMin;
+        //}
+        return rand;
     }
-    public int AmountSpawn()
+    public int ChanceSpawnMonster()
     {
-        int amount = new int();
-        if (PlayerManager.instance.heroList.Count > 3)
-        {
-            amount = statInfo.anmountPlayerSpawanMin;
-        }
-        if (PlayerManager.instance.heroList.Count < 3)
-        {
-            amount = statInfo.anmountPlayerSpawanMin;
-        }
+        int rand = Random.Range(statInfo.amountMonsterSpawanMin, statInfo.amountMonsterSpawanMax);
 
-        return amount;
+        //if (rand <= 40)
+        //{
+        //    //isPlayerSpwan = true;
+        //    amountPlayer = statInfo.anmountPlayerSpawanMax;
+        //}
+        //else if (rand >= 40 && rand <= 60)
+        //{
+        //    // isPlayerSpwan = false;
+        //    amountPlayer = statInfo.amountPlayerSpawanMin;
+        //}
+        return rand;
     }
 }
+
 [System.Serializable]
 public class StatInfo
 {
-    [Space]
-    public int startNumberplayer = 1;
-    [Space]
-    [Range(1, 5)]
-    public int startNumbermonster;
+    [Range(1, 3)]
+    public int startNumberPlayerChild;
     [Space]
     [Range(1, 5)]
-    public int startNumberobstacle;
+    public int startNumberMonster;
+    [Space]
+    [Range(1, 5)]
+    public int startNumberObstacle;
     [Space]
     [Range(1, 25), Tooltip("min =1,max=25")]
     public int minPlayerAttack, maxPlayerAttack, minMonsterAttack, maxMonsterrAttack;
@@ -89,11 +96,9 @@ public class StatInfo
     public int minPlayerHeart, maxPlayerHeart, minMonsterHeart, maxMonsterHeart;
     [Space]
     [Range(0.1f, 2), Tooltip("min =0.1f,max=2")]
-    public float growing;
+    public float growing;    
     [Space]
-    [Tooltip("chance/100%")]
-    public float chancePlayer, chanceMonster;
-    [Space]
+    [Tooltip("chance")]
     [Range(1, 5)]
-    public int anmountPlayerSpawanMin, anmountPlayerSpawanMax, anmountMonsterSpawanMin, anmountMonsterSpawanMax;
+    public int amountPlayerSpawanMin, anmountPlayerSpawanMax, amountMonsterSpawanMin, amountMonsterSpawanMax;
 }

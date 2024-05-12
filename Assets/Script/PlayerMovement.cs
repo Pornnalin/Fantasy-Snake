@@ -8,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Rigidbody2D rigi;
     private Vector3 currentPos;
- //   private float currentRotZ;
+    //   private float currentRotZ;
     //[SerializeField] private bool isLockU, isLockD, isLockR, isLockL;
     [Space]
     //  [SerializeField] private SpriteRenderer[] collidersHit;
@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
         //playerManager = transform.root.GetComponent<PlayerManager>();
         //  gameMananger = FindAnyObjectByType<GameMananger>();
         currentPos = transform.localPosition;
-      //  currentRotZ = transform.localRotation.eulerAngles.z;
+        //  currentRotZ = transform.localRotation.eulerAngles.z;
     }
 
     // Update is called once per frame
@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
                 else
                 {
                     InputOnlyKeyboard();
-                   // Debug.Log(currentPos);
+                    // Debug.Log(currentPos);
 
                 }
                 CheckPlayerMove();
@@ -117,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void InputOnlyKeyboard()
     {
-        if (Input.GetKeyDown(KeyCode.W) && PlayerManager.instance.isLockU == false) 
+        if (Input.GetKeyDown(KeyCode.W) && PlayerManager.instance.isLockU == false)
         {
             currentPos += Vector3.up;
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
@@ -131,8 +131,8 @@ public class PlayerMovement : MonoBehaviour
 
         }
         else if (Input.GetKeyDown(KeyCode.S) && PlayerManager.instance.isLockD == false)
-        {      
-            currentPos += Vector3.down;           
+        {
+            currentPos += Vector3.down;
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180f));
             PlayerManager.instance.isLockU = true;
             PlayerManager.instance.isLockL = false;
@@ -189,12 +189,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (i != 0)
             {
-                //if (PlayerManager.instance.heroList[0].transform.position == PlayerManager.instance.heroList[i].transform.position)
-                //{
-                //    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
-                //}
-                //else 
-                if (mark.transform.position == PlayerManager.instance.heroList[i].transform.position)
+                if (PlayerManager.instance.heroList[0].transform.position == PlayerManager.instance.heroList[i].transform.position)
+                {
+                    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
+                }
+                else if (mark.transform.position == PlayerManager.instance.heroList[i].transform.position)
                 {
                     PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
 

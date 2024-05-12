@@ -53,6 +53,7 @@ public class BattleSystems : MonoBehaviour
                 displayUI.monsArrowGroup.SetActive(false);
                 break;
             case battleStage.MONSTERTURN:
+
                 UpdatePlayerText();
                 displayUI.playerArrowGroup.SetActive(false);
                 displayUI.monsArrowGroup.SetActive(true);
@@ -68,7 +69,9 @@ public class BattleSystems : MonoBehaviour
                 if (!spawn.isSpwan)
                 {
                     spawn.isSpwan = true;
-                    spawn.SpawnPlayer();
+                    //spawn monster or trap
+                    spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnMonster(), spawn.monsterPrefab, false);
+                   // spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnMonster(), spawn.obstaclePrefab, false);
                 }
                 state = battleStage.NONE;
                 PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
@@ -76,7 +79,7 @@ public class BattleSystems : MonoBehaviour
             case battleStage.LOST:
                 if (PlayerManager.instance.heroList.Count == 1)
                 {
-                    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
+                    PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;                    
                 }
                 break;
         }

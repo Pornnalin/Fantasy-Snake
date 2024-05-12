@@ -15,19 +15,21 @@ public class PlayerController : MonoBehaviour
     public bool isEndAttack;
     private DisplayUI displayUI;
     private PlayerUI playerUI;
+    private Spawn spawn;
     // Start is called before the first frame update
     void Start()
-    {
-        //gameMananger = FindAnyObjectByType<GameMananger>();
-        //   playerManager = FindAnyObjectByType<PlayerManager>();
+    {       
         battleSystems = FindAnyObjectByType<BattleSystems>();
         displayUI = FindAnyObjectByType<DisplayUI>();
+        spawn = FindAnyObjectByType<Spawn>();
         playerUI = FindAnyObjectByType<PlayerUI>();
 
         playerProfile.attack = GameMananger.instance.statInfo.minPlayerAttack;
         playerProfile.health = GameMananger.instance.statInfo.minPlayerHeart;
 
-
+        SpriteRenderer sprite = this.GetComponent<SpriteRenderer>();
+        Color _color = new Color(Random.value, Random.value, Random.value);
+        sprite.color = _color;
         //Debug.Log("SetDefault_Player" + name);
     }
 
@@ -57,11 +59,11 @@ public class PlayerController : MonoBehaviour
                 }
                 break;
             case BattleSystems.battleStage.PLAYERTURN:
-                PlayerManager.instance.ManageStatUI();
+               // PlayerManager.instance.ManageStatUI();
                 InputAttack();
                 break;
             case BattleSystems.battleStage.MONSTERTURN:
-                PlayerManager.instance.ManageStatUI();
+              //  PlayerManager.instance.ManageStatUI();
 
                 break;
             case BattleSystems.battleStage.WON:
@@ -298,9 +300,10 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             collision.gameObject.SetActive(false);
+            spawn.SpwanNewCharacterOrObject(1, spawn.obstaclePrefab, false);
             PlayerManager.instance.RemovePlayerDie();
         }
-        if (collision.gameObject.CompareTag("Friend"))
+        if (collision.gameObject.CompareTag("Friend") && this.transform.gameObject.name == PlayerManager.instance.heroList[0].name)
         {
             int last = PlayerManager.instance.heroPosition.Count - 1;
 
@@ -322,16 +325,21 @@ public class PlayerController : MonoBehaviour
             {
                 collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y - 1);
             }
-           
+
             Debug.Log(collision.name);
             PlayerManager.instance.heroList.Add(collision.transform);
             PlayerManager.instance.heroPosition.Add(collision.transform.position);
             PlayerManager.instance.heroSprite.Add(collision.GetComponent<SpriteRenderer>());
             collision.tag = "Player";
-            collision.gameObject.layer= LayerMask.NameToLayer("Player");
+            collision.gameObject.layer = LayerMask.NameToLayer("Player");
             collision.isTrigger = false;
 
             Debug.Log("Found Friend");
+           // Debug.Log(GameMananger.instance.ChanceSpawnPlayer());
+            //  StartCoroutine(spawn.SpwanNewCharacterOrObject()));
+            spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnPlayer(), spawn.playerChildPrefab, true);
+
+
         }
     }
 
