@@ -80,8 +80,10 @@ public class BattleSystems : MonoBehaviour
             rand = _rand;
         }
     }
+    //action work from player controlller -->InputRandom
     public IEnumerator FuncDisplayUIAndChangeState()
     {
+        RandomNumber();
         displayUI.numberText.text = rand.ToString();
         displayUI.result.SetActive(true);
         displayUI.uiOddEven.SetActive(false);
@@ -132,16 +134,18 @@ public class BattleSystems : MonoBehaviour
         displayUI.monsterHealthText.text = monsterControl.monsterProflie.health.ToString();
         displayUI.monsterAttackText.text = monsterControl.monsterProflie.attack.ToString();
     }
+
+    //action work from player controlller --->InputAttack
     public IEnumerator PlayerTurnAttack()
     {
         yield return new WaitForSeconds(1f);
         if (monsterControl.monsterProflie.health > 0)
         {
-            monsterControl.monsterProflie.health -= playerControl.playerProfile.attack;           
+            monsterControl.monsterProflie.health -= playerControl.playerProfile.attack;
             Debug.Log("<color=red>Player_Hit_Monster!!" + "</color>");
             monsterControl.GetComponentInChildren<SpriteRenderer>().color = Color.red;
             yield return new WaitForSeconds(0.5f);
-            monsterControl.GetComponentInChildren<SpriteRenderer>().color = Color.white;           
+            monsterControl.GetComponentInChildren<SpriteRenderer>().color = Color.white;
             yield return new WaitForSeconds(.5f);
 
             if (monsterControl.monsterProflie.health > 0)
@@ -156,11 +160,12 @@ public class BattleSystems : MonoBehaviour
                 MonsterManager.instance.monsList.RemoveAll(x => x.name == monsterControl.transform.root.name);
 
                 //remove monster
-                Debug.Log("<color=red>MonsterDie!!" + monsterControl.transform.root.gameObject +"</color>");
+                Debug.Log("<color=red>MonsterDie!!" + monsterControl.transform.root.gameObject + "</color>");
                 Destroy(monsterControl.transform.root.gameObject);
-                
+
                 state = battleStage.WON;
                 PlayerManager.instance.amountKilled += 1;
+                Debug.Log("PlayerWon");
 
             }
             playerControl.isEndAttack = false;
@@ -168,6 +173,7 @@ public class BattleSystems : MonoBehaviour
         else
         {
             state = battleStage.WON;
+            Debug.Log("PlayerWon");
             playerControl.isEndAttack = false;
 
         }
@@ -176,11 +182,11 @@ public class BattleSystems : MonoBehaviour
     IEnumerator MonsterTurnAttack()
     {
         yield return new WaitForSeconds(2f);
+        StartCoroutine(playerControl.Vibration(0.1f,0.5f));
         if (playerControl.playerProfile.health > 0)
         {
-            playerControl.playerProfile.health -= monsterControl.monsterProflie.attack;           
+            playerControl.playerProfile.health -= monsterControl.monsterProflie.attack;
             Debug.Log("<color=red>Monster_Hit_ME!!" + "</color>");
-
             playerControl.GetComponent<SpriteRenderer>().color = Color.red;
             yield return new WaitForSeconds(0.5f);
             playerControl.GetComponent<SpriteRenderer>().color = Color.white;
@@ -192,17 +198,19 @@ public class BattleSystems : MonoBehaviour
             }
             else
             {
-                state = battleStage.LOST;
 
                 if (PlayerManager.instance.playerTransList.Count > 1)
                 {
                     //remove first and move the line 
-                    StartCoroutine(WaitContinue());
+                    StartCoroutine(WaitPlayerContinue());
 
                 }
                 else
                 {
                     isPlayerContinue = false;
+                    state = battleStage.LOST;
+                    Debug.Log("PlayerLost");
+
                 }
 
             }
@@ -213,12 +221,13 @@ public class BattleSystems : MonoBehaviour
         {
 
             state = battleStage.LOST;
+            Debug.Log("PlayerLost");
             isMonsAttack = false;
 
 
         }
     }
-    IEnumerator WaitContinue()
+    IEnumerator WaitPlayerContinue()
     {
         isPlayerContinue = true;     
 
@@ -227,8 +236,9 @@ public class BattleSystems : MonoBehaviour
             PlayerManager.instance.RemovePlayerDie();
             state = battleStage.PLAYERTURN;
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         isPlayerContinue = false;
+        Debug.Log("NextPlayer");
 
     }
     IEnumerator SpawnNewMonster()
@@ -247,6 +257,7 @@ public class BattleSystems : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         spawn.isSpwan = false;
         state = battleStage.NONE;
+        Debug.Log("battleStageEnd");
         PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.MOVE;
     }
 }

@@ -661,8 +661,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 267, y: -94}
-  m_SizeDelta: {x: 104.7103, y: 104.7103}
+  m_AnchoredPosition: {x: 208.70258, y: -94}
+  m_SizeDelta: {x: 69.5031, y: 69.5031}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &64003370
 MonoBehaviour:
@@ -2105,8 +2105,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 107, y: -94}
-  m_SizeDelta: {x: 131.3137, y: 131.3137}
+  m_AnchoredPosition: {x: 102.5, y: -94}
+  m_SizeDelta: {x: 87.1616, y: 87.1616}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &147199938
 MonoBehaviour:
@@ -11971,7 +11971,7 @@ GameObject:
   - component: {fileID: 953385837}
   - component: {fileID: 953385836}
   m_Layer: 0
-  m_Name: LevelControl
+  m_Name: StatControl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17451,9 +17451,9 @@ MonoBehaviour:
     maxPlayerAttack: 8
     minMonsterAttack: 1
     maxMonsterrAttack: 10
-    minPlayerHeart: 3
+    minPlayerHeart: 2
     maxPlayerHeart: 10
-    minMonsterHeart: 2
+    minMonsterHeart: 3
     maxMonsterHeart: 10
     growing: 2
     amountPlayerSpawanMin: 1

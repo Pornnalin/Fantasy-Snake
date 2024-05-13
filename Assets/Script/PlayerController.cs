@@ -239,6 +239,7 @@ public class PlayerController : MonoBehaviour
             {
                 isEndAttack = true;
                 StartCoroutine(battleSystems.PlayerTurnAttack());
+                StartCoroutine(Vibration(0.7f,0.5f));           
                 Debug.Log("Player_" + name + "Attack_" + battleSystems.monsterControl);
             }
             else if ((!Input.GetKeyDown(KeyCode.Return) || !Gamepad.current.rightTrigger.wasPressedThisFrame) && Input.anyKey)
@@ -263,6 +264,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public IEnumerator Vibration(float before,float affter)
+    {
+        yield return new WaitForSeconds(before);
+        Gamepad.current.SetMotorSpeeds(0.123f, 0.234f);
+        yield return new WaitForSeconds(affter);
+        Gamepad.current.SetMotorSpeeds(0, 0);
+
+    }
+ 
     #endregion
     private void SetBoolForSwitch(bool canPress, bool isSwtichL_To_F, bool isSwtichF_To_S)
     {

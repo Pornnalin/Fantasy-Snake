@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
 
-public class LevelControl : MonoBehaviour
+public class StatControl : MonoBehaviour
 {
     [SerializeField] float targetTime;
     [SerializeField] float time;
@@ -50,6 +50,22 @@ public class LevelControl : MonoBehaviour
             if (player.playerProfile.attack < maxAttackP)
             {
                 player.playerProfile.attack += 1;               
+                Debug.Log("<color=green>P_Att_lv+" + player.name + "</color>");
+
+            }
+        }
+
+        for (int i = 0; i < PlayerManager.instance.PlayerNotInTeam.Count; i++)
+        {
+            PlayerController player = PlayerManager.instance.PlayerNotInTeam[i].GetComponent<PlayerController>();
+            if (player.playerProfile.health < maxHealthP)
+            {
+                player.playerProfile.health += 1;
+                Debug.Log("<color=green>P_Health_lv+" + player.name + "</color>");
+            }
+            if (player.playerProfile.attack < maxAttackP)
+            {
+                player.playerProfile.attack += 1;
                 Debug.Log("<color=green>P_Att_lv+" + player.name + "</color>");
 
             }
