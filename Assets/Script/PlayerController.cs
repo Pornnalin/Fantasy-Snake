@@ -294,7 +294,7 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        else if (collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
             collision.gameObject.SetActive(false);
             //remove in list
@@ -305,7 +305,7 @@ public class PlayerController : MonoBehaviour
             PlayerManager.instance.RemovePlayerDie();
         }
 
-        else if (collision.gameObject.CompareTag("Friend") && this.transform.gameObject.name == PlayerManager.instance.heroList[0].name)
+        if (collision.gameObject.CompareTag("Friend") && this.transform.gameObject.name == PlayerManager.instance.heroList[0].name)
         {
             ConditionPosition(collision);
 
@@ -321,6 +321,13 @@ public class PlayerController : MonoBehaviour
 
             spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnPlayer(), spawn.playerChildPrefab, true);
 
+
+        }
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+           // collision.gameObject.SetActive(false);
+            //Destroy(collision.gameObject);
+            PlayerManager.instance.RemovePlayerDie();
 
         }
     }
@@ -358,7 +365,7 @@ public class PlayerController : MonoBehaviour
 
     private void GetMonster(Collider2D collision)
     {
-        //get monster detech
+        //get monster detect
         MonsterController _monster = collision.transform.parent.parent.GetComponent<MonsterController>();
         battleSystems.monsterControl = _monster;
     }
