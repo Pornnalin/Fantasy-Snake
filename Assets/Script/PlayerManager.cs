@@ -10,17 +10,17 @@ public class PlayerManager : MonoBehaviour
     public enum playerStage { NONE, MOVE, BATTLE, GAMEOVER }
     public playerStage currentPlayerStage;
     [Space]
-    public List<Vector2> heroPosition = new List<Vector2>();
-    public List<float> heroRotation = new List<float>();
-    public List<Transform> heroList = new List<Transform>();
-    public List<Transform> heroNotInTeam = new List<Transform>();
-    //  public List<Vector2> her = new List<Vector2>();
+    public List<Vector2> playerPosition = new List<Vector2>();
+    public List<float> playerRotation = new List<float>();
+    public List<Transform> playerTransList = new List<Transform>();
+    public List<Transform> PlayerNotInTeam = new List<Transform>();  
     public List<SpriteRenderer> heroSprite = new List<SpriteRenderer>();
     [Space]
     public int amountKilled;
-    private SpriteRenderer heroFirst;
+    private SpriteRenderer playerFirst;
     private DisplayUI displayUI;
-    public Transform playerDieTran;
+    private Transform playerDieTran;
+    [Space]
     public bool isLockU, isLockD, isLockR, isLockL;
     // Start is called before the first frame update
 
@@ -44,8 +44,9 @@ public class PlayerManager : MonoBehaviour
     private void Update()
     {
         displayUI.UpdateColor(GameMananger.instance.isGamePadDetect ? Color.white : Color.gray);
+        displayUI.keyboardUi.color = Keyboard.current != null ? Color.white : Color.gray;
 
-        if (heroList.Count<=0)
+        if (playerTransList.Count<=0)
         {
             currentPlayerStage = playerStage.GAMEOVER;
         }
@@ -99,7 +100,7 @@ public class PlayerManager : MonoBehaviour
     #endregion
     public void FlipXAllHero(bool isFlipX)
     {
-        for (int i = 0; i < heroPosition.Count; i++)
+        for (int i = 0; i < playerPosition.Count; i++)
         {
             heroSprite[i].flipX = isFlipX;
         }
@@ -110,93 +111,46 @@ public class PlayerManager : MonoBehaviour
         int childLength = this.transform.childCount;
         for (int i = 0; i < childLength; i++)
         {
-            heroPosition.Add(transform.GetChild(i).transform.localPosition);
-            heroRotation.Add(transform.GetChild(i).transform.localRotation.eulerAngles.z);
-            heroList.Add(transform.GetChild(i));
+            playerPosition.Add(transform.GetChild(i).transform.localPosition);
+            playerRotation.Add(transform.GetChild(i).transform.localRotation.eulerAngles.z);
+            playerTransList.Add(transform.GetChild(i));
             heroSprite.Add(transform.GetChild(i).GetComponent<SpriteRenderer>());
             ScriptTurnONOFF(i);
 
         }
-        heroFirst = heroList[0].GetComponent<SpriteRenderer>();
+        playerFirst = playerTransList[0].GetComponent<SpriteRenderer>();
+        Debug.Log("GetPlayerToList");
     }
 
     public void WhenMoveUpdatePostionTeam()
     {
-        int childLength = this.transform.childCount - 1;
-        int childLength_2 = this.transform.childCount - 2;
+        int childLength = this.transform.childCount - 1;        
         for (int i = 0; i < childLength; i++)
         {
             int SkipZero = i + 1;
-            heroList[SkipZero].transform.position = heroPosition[i];
+            playerTransList[SkipZero].transform.position = playerPosition[i];
 
-            heroList[SkipZero].transform.rotation = Quaternion.Euler(new Vector3(0, 0, heroList[0].transform.localRotation.eulerAngles.z));
+            playerTransList[SkipZero].transform.rotation = Quaternion.Euler(new Vector3(0, 0, playerTransList[0].transform.localRotation.eulerAngles.z));
         }
-        //   AlongRot();
-        heroPosition[0] = heroList[0].transform.position;
-        heroRotation[0] = heroList[0].transform.localRotation.eulerAngles.z;
+        
+        playerPosition[0] = playerTransList[0].transform.position;
+        playerRotation[0] = playerTransList[0].transform.localRotation.eulerAngles.z;
 
-        //    //update last position
+        //update new position
         UpdateNewPositionTeam();
     }
-    public void AlongRot()
-    {
-        int childLength = this.transform.childCount - 1;
-        int childLength_2 = this.transform.childCount - 2;
-
-        for (int i = 0; i < heroList.Count; i++)
-        {
-            int before = i - 1;
-            if (i == 0) { continue; }
-            if (heroList[0].transform.localRotation.eulerAngles.z == 180)//
-            {
-                if (heroList[i].transform.position.x != heroList[before].transform.position.x)
-                {
-                    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90f));
-                }
-            }
-            else if (heroList[0].transform.localRotation.eulerAngles.z == -180)
-            {
-                if (heroList[i].transform.position.x != heroList[before].transform.position.x)
-                {
-                    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90f));
-                }
-            }
-            else if (heroList[0].transform.localRotation.eulerAngles.z == 270)//
-            {
-                //if (heroList[i].transform.position.y != heroList[before].transform.position.y)
-                //{
-                //    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180f));
-                //}
-            }
-
-            else if (heroList[0].transform.localRotation.eulerAngles.z == 0)//
-            {
-                //    if (heroList[i].transform.position.x != heroList[before].transform.position.x)
-                //    {
-                //        heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90f));
-                //    }
-            }
-            else if (heroList[0].transform.localRotation.eulerAngles.z == 90)//
-            {
-                //if (heroList[i].transform.position.y != heroList[before].transform.position.y)
-                //{
-                //    heroList[i].transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-                //}
-
-            }
-
-        }
-    }
+    
+    
     public void UpdateNewPositionTeam()
     {
-        for (int i = 0; i < heroPosition.Count; i++)
+        for (int i = 0; i < playerPosition.Count; i++)
         {
-            heroPosition[i] = heroList[i].position;
+            playerPosition[i] = playerTransList[i].position;
         }
     }
     public void UpadteEnabledScript()
     {
-        for (int i = 0; i < heroPosition.Count; i++)
+        for (int i = 0; i < playerPosition.Count; i++)
         {
             ScriptTurnONOFF(i);
         }
@@ -206,67 +160,30 @@ public class PlayerManager : MonoBehaviour
     {
         if (i == 0)
         {
-            heroList[i].gameObject.GetComponent<PlayerController>().enabled = true;
-            heroList[i].gameObject.GetComponent<PlayerMovement>().enabled = true;
+            playerTransList[i].gameObject.GetComponent<PlayerController>().enabled = true;
+            playerTransList[i].gameObject.GetComponent<PlayerMovement>().enabled = true;
         }
         else
         {
-            heroList[i].gameObject.GetComponent<PlayerController>().enabled = false;
-            heroList[i].gameObject.GetComponent<PlayerMovement>().enabled = false;
+            playerTransList[i].gameObject.GetComponent<PlayerController>().enabled = false;
+            playerTransList[i].gameObject.GetComponent<PlayerMovement>().enabled = false;
         }
     }
 
     public void ResetListAndAddNew()
     {
-        heroList = new List<Transform>();
-        heroPosition = new List<Vector2>();
+        playerTransList = new List<Transform>();
+        playerPosition = new List<Vector2>();
         heroSprite = new List<SpriteRenderer>();
-        heroRotation = new List<float>();
+        playerRotation = new List<float>();
         GetData();
 
     }
-    public void ManageStatUI()
-    {
-        for (int i = 0; i < heroList.Count; i++)
-        {
-            if (i == 0)
-            {
-                heroList[i].GetComponent<PlayerUI>().arrowGroup.SetActive(true);
-                heroList[i].GetComponent<PlayerUI>().statGroup.SetActive(false);
-            }
-            else
-            {
-                heroList[i].GetComponent<PlayerUI>().arrowGroup.SetActive(false);
-                heroList[i].GetComponent<PlayerUI>().statGroup.SetActive(true);
-            }
-        }
-
-    }
+   
     public void RemovePlayerDie()
-    {
-        //heroList[0].gameObject.SetActive(false);
-        //List<Vector2> originPos = new List<Vector2>(heroPosition);
-        //originPos.RemoveAt(originPos.Count - 2);
-        //GameObject playerDie = heroList[0].gameObject;       
-        //Debug.Log(playerDie + "___Die");
-        //heroList.RemoveAll(x => x.name == playerDie.name);
-        //heroPosition.RemoveAt(heroList.Count - 2);
-        //heroSprite.RemoveAll(x => x.name == playerDie.name);
+    {       
 
-        //heroPosition = new List<Vector2>();
-        //foreach (var item in originPos)
-        //{
-        //    heroPosition.Add(item);
-        //}
-
-        //for (int i = 0; i < heroList.Count; i++)
-        //{
-        //    heroList[i].position = new Vector2();
-        //    heroList[i].position = new Vector2(originPos[i].x, originPos[i].y);
-        //    ScriptTurnONOFF(i);
-        //}
-
-        List<Vector2> originPos = new List<Vector2>(heroPosition);
+        List<Vector2> originPos = new List<Vector2>(playerPosition);
         List<Vector2> copy = new List<Vector2>();
         int lastIndex = originPos.Count - 1;
         for (int i = 0; i < originPos.Count; i++)
@@ -278,24 +195,24 @@ public class PlayerManager : MonoBehaviour
             }
 
         }
-        heroPosition = new List<Vector2>();
+        playerPosition = new List<Vector2>();
         foreach (var item in copy)
         {
-            heroPosition.Add(item);
+            playerPosition.Add(item);
         }
 
-        heroList[0].gameObject.SetActive(false);
-        GameObject move = heroList[0].gameObject;
-        move.transform.SetParent(playerDieTran);
-        Debug.Log(move.name + "___Die");
-        heroList.RemoveAt(0);
-        heroSprite.RemoveAt(0);
-        //  Destroy(heroList[0].gameObject);
+        playerTransList[0].gameObject.SetActive(false);
+        GameObject move = playerTransList[0].gameObject;
+        move.transform.SetParent(playerDieTran);       
+        Debug.Log("<color=red>" + move.name + "_Die</color>");
 
-        for (int i = 0; i < heroList.Count; i++)
+        playerTransList.RemoveAt(0);
+        heroSprite.RemoveAt(0);      
+
+        for (int i = 0; i < playerTransList.Count; i++)
         {
-            heroList[i].position = new Vector3();
-            heroList[i].position = new Vector3(copy[i].x, copy[i].y, 0);
+            playerTransList[i].position = new Vector3();
+            playerTransList[i].position = new Vector3(copy[i].x, copy[i].y, 0);
             ScriptTurnONOFF(i);
         }
 

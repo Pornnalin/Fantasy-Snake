@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
         spawn = FindAnyObjectByType<Spawn>();
         playerProfile.attack = GameMananger.instance.statInfo.minPlayerAttack;
         playerProfile.health = GameMananger.instance.statInfo.minPlayerHeart;
-
+        Debug.Log("<color=green>SetDefault_player" + name + "</color>");
     }
 
     // Update is called once per frame
@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
         {
             case PlayerManager.playerStage.MOVE:
 
-                if (PlayerManager.instance.heroList.Count > 2)
+                if (PlayerManager.instance.playerTransList.Count > 2)
                 {
                     SwitchFirstToSecond();
                     SwitchLastToFirst();
@@ -146,21 +146,21 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator ChangePositionInTeam_F_To_L()
     {
-        List<Vector2> originPos = PlayerManager.instance.heroPosition;
+        List<Vector2> originPos = PlayerManager.instance.playerPosition;
         int lastIndex = originPos.Count - 1;
 
         for (int i = 0; i < originPos.Count; i++)
         {
             if (i == 0)
             {
-                PlayerManager.instance.heroList[i].localPosition = originPos[lastIndex];
-                PlayerManager.instance.heroList[i].SetSiblingIndex(lastIndex);
+                PlayerManager.instance.playerTransList[i].localPosition = originPos[lastIndex];
+                PlayerManager.instance.playerTransList[i].SetSiblingIndex(lastIndex);
             }
             else
             {
                 int erase = i - 1;
-                PlayerManager.instance.heroList[i].localPosition = originPos[erase];
-                PlayerManager.instance.heroList[i].SetSiblingIndex(erase);
+                PlayerManager.instance.playerTransList[i].localPosition = originPos[erase];
+                PlayerManager.instance.playerTransList[i].SetSiblingIndex(erase);
 
             }
         }
@@ -203,7 +203,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator ChangePositionInTeam_L_To_F()
     {
-        List<Vector2> originPos = PlayerManager.instance.heroPosition;
+        List<Vector2> originPos = PlayerManager.instance.playerPosition;
         int lastIndex = originPos.Count - 1;
         //  List<Vector2> targetPos = new List<Vector2>();
         for (int i = 0; i < originPos.Count; i++)
@@ -212,15 +212,15 @@ public class PlayerController : MonoBehaviour
             {
                 int add = i + 1;
                 //  targetPos.Add(originPos[i]);
-                PlayerManager.instance.heroList[i].localPosition = originPos[add];
-                PlayerManager.instance.heroList[i].SetSiblingIndex(add);
+                PlayerManager.instance.playerTransList[i].localPosition = originPos[add];
+                PlayerManager.instance.playerTransList[i].SetSiblingIndex(add);
                 // Debug.Log(i);
             }
             else
             {
                 // targetPos.Add(originPos[i]);
-                PlayerManager.instance.heroList[lastIndex].localPosition = originPos[0];
-                PlayerManager.instance.heroList[lastIndex].SetSiblingIndex(0);
+                PlayerManager.instance.playerTransList[lastIndex].localPosition = originPos[0];
+                PlayerManager.instance.playerTransList[lastIndex].SetSiblingIndex(0);
             }
         }
         //   PlayerManager.instance.heroPosition = targetPos;
@@ -305,19 +305,19 @@ public class PlayerController : MonoBehaviour
             PlayerManager.instance.RemovePlayerDie();
         }
 
-        if (collision.gameObject.CompareTag("Friend") && this.transform.gameObject.name == PlayerManager.instance.heroList[0].name)
+        if (collision.gameObject.CompareTag("Friend") && this.transform.gameObject.name == PlayerManager.instance.playerTransList[0].name)
         {
             ConditionPosition(collision);
 
             Debug.Log("Found_" + collision.name);
-            PlayerManager.instance.heroList.Add(collision.transform);
-            PlayerManager.instance.heroPosition.Add(collision.transform.position);
+            PlayerManager.instance.playerTransList.Add(collision.transform);
+            PlayerManager.instance.playerPosition.Add(collision.transform.position);
             PlayerManager.instance.heroSprite.Add(collision.GetComponent<SpriteRenderer>());
             collision.tag = "Player";
             collision.gameObject.layer = LayerMask.NameToLayer("Player");
             collision.isTrigger = false;
             //remove in list
-            PlayerManager.instance.heroNotInTeam.RemoveAll(x => x.name == collision.gameObject.name);
+            PlayerManager.instance.PlayerNotInTeam.RemoveAll(x => x.name == collision.gameObject.name);
 
             spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnPlayer(), spawn.playerChildPrefab, true);
 
@@ -334,32 +334,32 @@ public class PlayerController : MonoBehaviour
 
     private void ConditionPosition(Collider2D collision)
     {
-        int last = PlayerManager.instance.heroPosition.Count - 1;
+        int last = PlayerManager.instance.playerPosition.Count - 1;
 
         collision.transform.SetParent(this.transform.root, true);
         // Debug.Log(this.transform.localEulerAngles.z);
         if (this.transform.localRotation.eulerAngles.z == 270f)
         {
-            collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x - 1, PlayerManager.instance.heroPosition[last].y);
+            collision.transform.position = new Vector3(PlayerManager.instance.playerPosition[last].x - 1, PlayerManager.instance.playerPosition[last].y);
         }
         else if (this.transform.localRotation.eulerAngles.z == 180)
         {
-            collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y + 1);
+            collision.transform.position = new Vector3(PlayerManager.instance.playerPosition[last].x, PlayerManager.instance.playerPosition[last].y + 1);
         }
         else if (this.transform.localRotation.eulerAngles.z == 90f)
         {
-            collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x + 1, PlayerManager.instance.heroPosition[last].y);
+            collision.transform.position = new Vector3(PlayerManager.instance.playerPosition[last].x + 1, PlayerManager.instance.playerPosition[last].y);
         }
         else
         {
-            collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y - 1);
+            collision.transform.position = new Vector3(PlayerManager.instance.playerPosition[last].x, PlayerManager.instance.playerPosition[last].y - 1);
         }
     }
 
     private void GetPlayer()
     {
         //get first player
-        PlayerController _player = PlayerManager.instance.heroList[0].gameObject.GetComponent<PlayerController>();
+        PlayerController _player = PlayerManager.instance.playerTransList[0].gameObject.GetComponent<PlayerController>();
         battleSystems.playerControl = _player;
     }
 

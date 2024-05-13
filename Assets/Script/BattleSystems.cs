@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class BattleSystems : MonoBehaviour
 {
+    public bool isPlayerContinue = false;
     public enum battleStage { NONE, RANDOM, PLAYERTURN, MONSTERTURN, WON, LOST }
+    [Space]
     public battleStage state;
     public bool isEven;
     public int rand;
@@ -12,19 +14,16 @@ public class BattleSystems : MonoBehaviour
     public string descriptionLucky;
     public string descriptionBad;
     private bool isMonsAttack = false;
+    [Space]
     private DisplayUI displayUI;
     public MonsterController monsterControl;
     public PlayerController playerControl;
-  
-
-    public bool isPlayerContinue = false;
     private Spawn spawn;
-    private bool canShake = false;
+    
     // Start is called before the first frame update
     void Start()
     {
         state = battleStage.NONE;
-        //  playerManager = FindAnyObjectByType<PlayerManager>();
         displayUI = FindAnyObjectByType<DisplayUI>();
         spawn = FindAnyObjectByType<Spawn>();
     }
@@ -64,7 +63,7 @@ public class BattleSystems : MonoBehaviour
 
                 break;
             case battleStage.LOST:
-                if (PlayerManager.instance.heroList.Count == 1)
+                if (PlayerManager.instance.playerTransList.Count == 1)
                 {
                     PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
                 }
@@ -83,8 +82,6 @@ public class BattleSystems : MonoBehaviour
     }
     public IEnumerator FuncDisplayUIAndChangeState()
     {
-        //  displayUI.oddOrEvenHead.SetActive(true);
-        RandomNumber();
         displayUI.numberText.text = rand.ToString();
         displayUI.result.SetActive(true);
         displayUI.uiOddEven.SetActive(false);
@@ -94,12 +91,11 @@ public class BattleSystems : MonoBehaviour
         if (playerControl.setNumber.Equals(rand))
         {
             ModiflyTextAndSetBool(descriptionLucky, true);
-            //   Debug.Log("Lucky" + playerControl.setNumber + isEven);
+          
 
         }
         else
         {
-            // Debug.Log("bad" + playerControl.setNumber + isEven);
             ModiflyTextAndSetBool(descriptionBad, false);
 
         }
@@ -141,12 +137,11 @@ public class BattleSystems : MonoBehaviour
         yield return new WaitForSeconds(1f);
         if (monsterControl.monsterProflie.health > 0)
         {
-            monsterControl.monsterProflie.health -= playerControl.playerProfile.attack;
-            Debug.Log("Player_Hit_Monster!!");
+            monsterControl.monsterProflie.health -= playerControl.playerProfile.attack;           
+            Debug.Log("<color=red>Player_Hit_Monster!!" + "</color>");
             monsterControl.GetComponentInChildren<SpriteRenderer>().color = Color.red;
             yield return new WaitForSeconds(0.5f);
-            monsterControl.GetComponentInChildren<SpriteRenderer>().color = Color.white;
-            //  StartCoroutine(Shake(monsterControl.transform.position));
+            monsterControl.GetComponentInChildren<SpriteRenderer>().color = Color.white;           
             yield return new WaitForSeconds(.5f);
 
             if (monsterControl.monsterProflie.health > 0)
@@ -155,17 +150,18 @@ public class BattleSystems : MonoBehaviour
             }
             else
             {
-               monsterControl.gameObject.SetActive(false);
+                monsterControl.gameObject.SetActive(false);
                 MonsterManager.instance.monsPosition.RemoveAll(x => x.Equals(monsterControl.transform.position));
 
                 MonsterManager.instance.monsList.RemoveAll(x => x.name == monsterControl.transform.root.name);
 
                 //remove monster
+                Debug.Log("<color=red>MonsterDie!!" + monsterControl.transform.root.gameObject +"</color>");
                 Destroy(monsterControl.transform.root.gameObject);
-                //Debug.Log("remove " + monsterControl.transform.root.name);
+                
                 state = battleStage.WON;
                 PlayerManager.instance.amountKilled += 1;
-              
+
             }
             playerControl.isEndAttack = false;
         }
@@ -182,8 +178,9 @@ public class BattleSystems : MonoBehaviour
         yield return new WaitForSeconds(2f);
         if (playerControl.playerProfile.health > 0)
         {
-            playerControl.playerProfile.health -= monsterControl.monsterProflie.attack;
-            Debug.Log("Monster_Hit_ME!!");
+            playerControl.playerProfile.health -= monsterControl.monsterProflie.attack;           
+            Debug.Log("<color=red>Monster_Hit_ME!!" + "</color>");
+
             playerControl.GetComponent<SpriteRenderer>().color = Color.red;
             yield return new WaitForSeconds(0.5f);
             playerControl.GetComponent<SpriteRenderer>().color = Color.white;
@@ -195,9 +192,9 @@ public class BattleSystems : MonoBehaviour
             }
             else
             {
-                state = battleStage.LOST;             
+                state = battleStage.LOST;
 
-                if (PlayerManager.instance.heroList.Count > 1)
+                if (PlayerManager.instance.playerTransList.Count > 1)
                 {
                     //remove first and move the line 
                     StartCoroutine(WaitContinue());
@@ -223,9 +220,7 @@ public class BattleSystems : MonoBehaviour
     }
     IEnumerator WaitContinue()
     {
-        isPlayerContinue = true;
-
-        //PlayerManager.instance.heroNotInTeam.RemoveAll(x => x.name == playerControl.name);
+        isPlayerContinue = true;     
 
         if (isPlayerContinue)
         {

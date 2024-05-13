@@ -7,7 +7,7 @@ public class LevelControl : MonoBehaviour
 {
     [SerializeField] float targetTime;
     [SerializeField] float time;
-    // Start is called before the first frame update
+   
     void Start()
     {
         targetTime = GameMananger.instance.statInfo.growing;
@@ -22,9 +22,7 @@ public class LevelControl : MonoBehaviour
         {
             if (time < targetTime)
             {
-                time += Time.deltaTime;
-
-               // Debug.Log(Mathf.Round(time));//
+                time += Time.deltaTime;              
             }
             else
             {
@@ -41,18 +39,19 @@ public class LevelControl : MonoBehaviour
         int maxAttackP = GameMananger.instance.statInfo.maxPlayerAttack;
         int maxAttackM = GameMananger.instance.statInfo.maxMonsterrAttack;
 
-        for (int i = 0; i < PlayerManager.instance.heroList.Count; i++)
+        for (int i = 0; i < PlayerManager.instance.playerTransList.Count; i++)
         {
-            PlayerController player = PlayerManager.instance.heroList[i].GetComponent<PlayerController>();
+            PlayerController player = PlayerManager.instance.playerTransList[i].GetComponent<PlayerController>();
             if (player.playerProfile.health < maxHealthP)
             {
-                player.playerProfile.health += 1;
-                Debug.Log("P_Health_lv+");
+                player.playerProfile.health += 1;                
+                Debug.Log("<color=green>P_Health_lv+" + player.name + "</color>");
             }
             if (player.playerProfile.attack < maxAttackP)
             {
-                player.playerProfile.attack += 1;
-                Debug.Log("P_Att_lv+");
+                player.playerProfile.attack += 1;               
+                Debug.Log("<color=green>P_Att_lv+" + player.name + "</color>");
+
             }
         }
 
@@ -64,13 +63,13 @@ public class LevelControl : MonoBehaviour
                 if (monsterController.monsterProflie.health < maxHealthM)
                 {
                     monsterController.monsterProflie.health += 1;
-                     Debug.Log("M_Health_lv+");
+                    Debug.Log("<color=white>M_Health_lv+" + monsterController.transform.root.name + "</color>");
+
                 }
                 if (monsterController.monsterProflie.attack < maxAttackM)
                 {
-                    monsterController.monsterProflie.attack += 1;
-                    Debug.Log("M_Att_lv+");
-
+                    monsterController.monsterProflie.attack += 1;                    
+                    Debug.Log("<color=white>M_Att_lv+" + monsterController.transform.root.name + "</color>");
                 }
 
             }

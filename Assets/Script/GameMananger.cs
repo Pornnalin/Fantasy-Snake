@@ -15,12 +15,11 @@ public class GameMananger : MonoBehaviour
     public bool isSwtichF_To_S = false;
     public bool isSwtichL_To_F = false;
     public bool canPress = true;
-    [Space]
-    [Header("Spawn")]
-    public bool isPlayerSpwan;
-    int amountPlayer;
-    int amountMonster;
-    public bool isSpwanDone = false;
+    
+   // public bool isPlayerSpwan;
+    //public bool isSpwanDone = false;
+    //int amountPlayer;
+    //int amountMonster;
     // Start is called before the first frame update
     private void Awake()
     {
@@ -32,7 +31,7 @@ public class GameMananger : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-        Debug.Log("prepearData");
+        Debug.Log("PrepearSpawn");
     }
     void Start()
     {

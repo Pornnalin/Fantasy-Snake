@@ -29,6 +29,7 @@ public class DisplayUI : MonoBehaviour
     [Space]
     [Header("GamepadUI")]
     public Image[] gamepadUi;
+    public Image keyboardUi;
     
     // Start is called before the first frame update
     void Start()
@@ -41,7 +42,7 @@ public class DisplayUI : MonoBehaviour
     }
     private void Update()
     {
-       // UpdateColor();
+       
     }
 
     public void UpdateColor(Color newColor)
@@ -50,5 +51,7 @@ public class DisplayUI : MonoBehaviour
         {
             gamepadUi[i].color = newColor;
         }
+
+        
     }
 }

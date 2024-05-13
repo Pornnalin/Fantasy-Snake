@@ -27,12 +27,10 @@ public class PlayerMovement : MonoBehaviour
                 if (GameMananger.instance.isGamePadDetect)
                 {
                     InputGamePadAndKeyborad();
-
                 }
                 else
                 {
                     InputOnlyKeyboard();
-                    // Debug.Log(currentPos);
 
                 }
                 CheckPlayerHitItSelf();
@@ -123,8 +121,6 @@ public class PlayerMovement : MonoBehaviour
             currentPos += Vector3.down;
             transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 180f));
             transform.localPosition = currentPos;
-            transform.localPosition.Normalize();
-
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
         }
         else if (Input.GetKeyDown(KeyCode.A) && !PlayerManager.instance.isLockL)
@@ -137,8 +133,6 @@ public class PlayerMovement : MonoBehaviour
             transform.localRotation = Quaternion.Euler(new Vector3(0, 0, 90f));
             PlayerManager.instance.FlipXAllHero(true);
             transform.localPosition = currentPos;
-            transform.localPosition.Normalize();
-
             PlayerManager.instance.WhenMoveUpdatePostionTeam();
 
         }
@@ -160,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void CheckPlayerHitItSelf()
     {
-        for (int i = 0; i < PlayerManager.instance.heroList.Count; i++)
+        for (int i = 0; i < PlayerManager.instance.playerTransList.Count; i++)
         {
             if (i != 0)
             {
@@ -174,7 +168,7 @@ public class PlayerMovement : MonoBehaviour
 
                 //}
 
-                if (mark.transform.position == PlayerManager.instance.heroList[i].transform.position)
+                if (mark.transform.position == PlayerManager.instance.playerTransList[i].transform.position)
                 {
                     PlayerManager.instance.currentPlayerStage = PlayerManager.playerStage.GAMEOVER;
 
