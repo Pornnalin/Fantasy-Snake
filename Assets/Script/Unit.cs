@@ -7,7 +7,5 @@ public class Unit
 {
     public int health;
     public int attack;
-    // public int level;
-   // public int currentHealth;
-    public float exp = 0;
 }
+   

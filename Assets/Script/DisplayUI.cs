@@ -28,8 +28,8 @@ public class DisplayUI : MonoBehaviour
     public TextMeshProUGUI amountKill;
     [Space]
     [Header("GamepadUI")]
-    public Image[] RT;
-    public Image LT;
+    public Image[] gamepadUi;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -46,10 +46,9 @@ public class DisplayUI : MonoBehaviour
 
     public void UpdateColor(Color newColor)
     {
-        for (int i = 0; i < RT.Length; i++)
+        for (int i = 0; i < gamepadUi.Length; i++)
         {
-            RT[i].color = newColor;
+            gamepadUi[i].color = newColor;
         }
-        LT.color = newColor;
     }
 }

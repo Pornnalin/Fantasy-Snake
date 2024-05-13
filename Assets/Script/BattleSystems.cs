@@ -15,7 +15,7 @@ public class BattleSystems : MonoBehaviour
     private DisplayUI displayUI;
     public MonsterController monsterControl;
     public PlayerController playerControl;
-    public float duration = 0.2f, strength = 0.3f, min = 0.1f, max = 1f;
+  
 
     public bool isPlayerContinue = false;
     private Spawn spawn;
@@ -155,9 +155,17 @@ public class BattleSystems : MonoBehaviour
             }
             else
             {
+               monsterControl.gameObject.SetActive(false);
+                MonsterManager.instance.monsPosition.RemoveAll(x => x.Equals(monsterControl.transform.position));
+
+                MonsterManager.instance.monsList.RemoveAll(x => x.name == monsterControl.transform.root.name);
+
+                //remove monster
+                Destroy(monsterControl.transform.root.gameObject);
+                //Debug.Log("remove " + monsterControl.transform.root.name);
                 state = battleStage.WON;
                 PlayerManager.instance.amountKilled += 1;
-                playerControl.playerProfile.exp += 0.5f;
+              
             }
             playerControl.isEndAttack = false;
         }
@@ -187,11 +195,11 @@ public class BattleSystems : MonoBehaviour
             }
             else
             {
-                state = battleStage.LOST;
-                monsterControl.monsterProflie.exp += 1f * GameMananger.instance.statInfo.growing;
+                state = battleStage.LOST;             
 
                 if (PlayerManager.instance.heroList.Count > 1)
                 {
+                    //remove first and move the line 
                     StartCoroutine(WaitContinue());
 
                 }
@@ -216,6 +224,8 @@ public class BattleSystems : MonoBehaviour
     IEnumerator WaitContinue()
     {
         isPlayerContinue = true;
+
+        //PlayerManager.instance.heroNotInTeam.RemoveAll(x => x.name == playerControl.name);
 
         if (isPlayerContinue)
         {

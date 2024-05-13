@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameMananger : MonoBehaviour
 {
@@ -56,6 +57,11 @@ public class GameMananger : MonoBehaviour
 
        
         return rand;
+    }
+
+    public void ResetGame(int index)
+    {
+        SceneManager.LoadScene(index);
     }
 }
 

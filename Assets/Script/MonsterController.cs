@@ -19,10 +19,10 @@ public class MonsterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (monsterProflie.health <= 0)
-        {
-            Destroy(this.gameObject);
-        }
+        //if (monsterProflie.health <= 0)
+        //{
+        //    Destroy(this.gameObject);
+        //}
        
     }
 }

@@ -26,9 +26,7 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-
-        displayUI.UpdateColor(GameMananger.instance.isGamePadDetect ? Color.white : Color.gray);
+    {        
 
         switch (PlayerManager.instance.currentPlayerStage)
         {
@@ -65,7 +63,10 @@ public class PlayerController : MonoBehaviour
             case BattleSystems.battleStage.LOST:
                 break;
         }
+
+      
     }
+  
     #region InputRandom
     private void InputRandom()
     {
@@ -204,23 +205,25 @@ public class PlayerController : MonoBehaviour
     {
         List<Vector2> originPos = PlayerManager.instance.heroPosition;
         int lastIndex = originPos.Count - 1;
-
+        //  List<Vector2> targetPos = new List<Vector2>();
         for (int i = 0; i < originPos.Count; i++)
         {
             if (i < lastIndex)
             {
                 int add = i + 1;
+                //  targetPos.Add(originPos[i]);
                 PlayerManager.instance.heroList[i].localPosition = originPos[add];
                 PlayerManager.instance.heroList[i].SetSiblingIndex(add);
                 // Debug.Log(i);
             }
             else
             {
+                // targetPos.Add(originPos[i]);
                 PlayerManager.instance.heroList[lastIndex].localPosition = originPos[0];
                 PlayerManager.instance.heroList[lastIndex].SetSiblingIndex(0);
             }
         }
-
+        //   PlayerManager.instance.heroPosition = targetPos;
         PlayerManager.instance.ResetListAndAddNew();
         yield return new WaitForSeconds(3f);
         SetBoolForSwitch(true, false, false);
@@ -238,7 +241,7 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(battleSystems.PlayerTurnAttack());
                 Debug.Log("Player_" + name + "Attack_" + battleSystems.monsterControl);
             }
-            else
+            else if ((!Input.GetKeyDown(KeyCode.Return) || !Gamepad.current.rightTrigger.wasPressedThisFrame) && Input.anyKey)
             {
                 Debug.Log("not right input!!!");
             }
@@ -252,7 +255,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Player_" + name + "Attack_" + battleSystems.monsterControl);
 
             }
-            else if (!Input.GetKeyDown(KeyCode.Space) && Input.anyKey)
+            else if (!Input.GetKeyDown(KeyCode.Return) && Input.anyKey)
             {
                 Debug.Log("not right input!!!");
             }
@@ -271,7 +274,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Monster"))
+        if (collision.gameObject.CompareTag("Monster") && this.gameObject.CompareTag("Player"))
         {
             Debug.Log("Found Monster");
 
@@ -291,49 +294,58 @@ public class PlayerController : MonoBehaviour
 
         }
 
-        if (collision.gameObject.CompareTag("Obstacle"))
+        else if (collision.gameObject.CompareTag("Obstacle"))
         {
             collision.gameObject.SetActive(false);
+            //remove in list
+            MonsterManager.instance.monsList.RemoveAll(x => x.name == collision.gameObject.name);
+            MonsterManager.instance.monsPosition.RemoveAll(x => x.Equals(collision.transform.position));
+            Destroy(collision.gameObject);
             spawn.SpwanNewCharacterOrObject(1, spawn.obstaclePrefab, false);
             PlayerManager.instance.RemovePlayerDie();
         }
-        if (collision.gameObject.CompareTag("Friend") && this.transform.gameObject.name == PlayerManager.instance.heroList[0].name)
+
+        else if (collision.gameObject.CompareTag("Friend") && this.transform.gameObject.name == PlayerManager.instance.heroList[0].name)
         {
-            int last = PlayerManager.instance.heroPosition.Count - 1;
+            ConditionPosition(collision);
 
-            collision.transform.SetParent(this.transform.root);
-            // Debug.Log(this.transform.localEulerAngles.z);
-            if (this.transform.localRotation.eulerAngles.z == 270f)
-            {
-                collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x - 1, PlayerManager.instance.heroPosition[last].y);
-            }
-            else if (this.transform.localRotation.eulerAngles.z == 180)
-            {
-                collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y + 1);
-            }
-            else if (this.transform.localRotation.eulerAngles.z == 90f)
-            {
-                collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x + 1, PlayerManager.instance.heroPosition[last].y);
-            }
-            else
-            {
-                collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y - 1);
-            }
-
-            Debug.Log(collision.name);
+            Debug.Log("Found_" + collision.name);
             PlayerManager.instance.heroList.Add(collision.transform);
             PlayerManager.instance.heroPosition.Add(collision.transform.position);
             PlayerManager.instance.heroSprite.Add(collision.GetComponent<SpriteRenderer>());
             collision.tag = "Player";
             collision.gameObject.layer = LayerMask.NameToLayer("Player");
             collision.isTrigger = false;
+            //remove in list
+            PlayerManager.instance.heroNotInTeam.RemoveAll(x => x.name == collision.gameObject.name);
 
-            Debug.Log("Found Friend");
-            // Debug.Log(GameMananger.instance.ChanceSpawnPlayer());
-            //  StartCoroutine(spawn.SpwanNewCharacterOrObject()));
             spawn.SpwanNewCharacterOrObject(GameMananger.instance.ChanceSpawnPlayer(), spawn.playerChildPrefab, true);
 
 
+        }
+    }
+
+    private void ConditionPosition(Collider2D collision)
+    {
+        int last = PlayerManager.instance.heroPosition.Count - 1;
+
+        collision.transform.SetParent(this.transform.root, true);
+        // Debug.Log(this.transform.localEulerAngles.z);
+        if (this.transform.localRotation.eulerAngles.z == 270f)
+        {
+            collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x - 1, PlayerManager.instance.heroPosition[last].y);
+        }
+        else if (this.transform.localRotation.eulerAngles.z == 180)
+        {
+            collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y + 1);
+        }
+        else if (this.transform.localRotation.eulerAngles.z == 90f)
+        {
+            collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x + 1, PlayerManager.instance.heroPosition[last].y);
+        }
+        else
+        {
+            collision.transform.position = new Vector3(PlayerManager.instance.heroPosition[last].x, PlayerManager.instance.heroPosition[last].y - 1);
         }
     }
 

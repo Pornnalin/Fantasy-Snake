@@ -29,7 +29,8 @@ public class Spawn : MonoBehaviour
     // private GameObject gg;
     [SerializeField] private List<Vector2> old;
     [SerializeField] private List<Vector2> setPostionSpawn;
-
+    [SerializeField] private List<Vector2> test;
+    int countSpawn;
     [ContextMenu("DebugPositionArea")]
     public void Area()
     {
@@ -44,7 +45,7 @@ public class Spawn : MonoBehaviour
                 vec = new Vector2(xPod, YPod);
                 //GameObject game = Instantiate(Resources.Load<GameObject>("Prefab/Floor"), vec, Quaternion.identity);
                 setPostionSpawn.Add(vec);
-
+                test.Add(vec);
                 Debug.Log(vec);
             }
         }
@@ -56,6 +57,24 @@ public class Spawn : MonoBehaviour
         //  Area();
         StartSpawn();
 
+    }
+    [ContextMenu("DebugPositionArea")]
+    public void Test()
+    {
+        Vector2 vec = new Vector2();
+        for (int i = 0; i < row; i++)
+        {
+            var xPod = startPos.position.x + i;
+            for (int j = 0; j < colum; j++)
+            {
+                var YPod = startPos.position.y - j;
+                vec = new Vector2(xPod, YPod);
+                //GameObject game = Instantiate(Resources.Load<GameObject>("Prefab/Floor"), vec, Quaternion.identity);
+                //  setPostionSpawn.Add(vec);
+                test.Add(vec);
+                // Debug.Log(vec);
+            }
+        }
     }
     private void Awake()
     {
@@ -71,24 +90,22 @@ public class Spawn : MonoBehaviour
     {
         //ShuffleList(setPostionSpawn);
         GameObject main = Instantiate(playerMainPrefab, Vector2.zero, Quaternion.identity);
-        main.transform.SetParent(parentPlayer);
-
-        //StartCoroutine(SpawnObjectChildPlayer(GameMananger.instance.statInfo.startNumberPlayerChild, 1.5f));
-        //StartCoroutine(FirstMonster(2f, .5f));
-        //StartCoroutine(WaitToSpawnObstacle(2.5f, GameMananger.instance.statInfo.startNumberObstacle, obstaclePrefab, false));
+        main.transform.SetParent(parentPlayer, false);
 
         for (int i = 0; i < GameMananger.instance.statInfo.startNumberPlayerChild; i++)
         {
+            countSpawn++;
             GameObject playerAnother = Instantiate(playerChildPrefab, setPostionSpawn[i], Quaternion.identity);
-            playerAnother.name = playerChildPrefab.name + "_" + i;
+            playerAnother.name = playerChildPrefab.name + "_" + countSpawn;
             PlayerManager.instance.heroNotInTeam.Add(playerAnother.transform);
         }
         int plusPlayer = GameMananger.instance.statInfo.startNumberPlayerChild;
         for (int j = 0; j < GameMananger.instance.statInfo.startNumberMonster; j++)
         {
-            //Instantiate(monsterPrefab, setPostionSpawn[j + plusPlayer], Quaternion.identity);
+            countSpawn++;
+
             GameObject monsAnother = Instantiate(monsterPrefab, setPostionSpawn[j + plusPlayer], Quaternion.identity);
-            monsAnother.name = monsterPrefab.name + "_" + j;
+            monsAnother.name = monsterPrefab.name + "_" + countSpawn;
             MonsterManager.instance.monsList.Add(monsAnother.transform);
             MonsterManager.instance.monsPosition.Add(monsAnother.transform.position);
             Debug.Log("Spwan_New_" + monsAnother.name);
@@ -97,8 +114,10 @@ public class Spawn : MonoBehaviour
         int plusPlayerPM = GameMananger.instance.statInfo.startNumberPlayerChild + GameMananger.instance.statInfo.startNumberMonster;
         for (int i = 0; i < GameMananger.instance.statInfo.startNumberObstacle; i++)
         {
+            countSpawn++;
+
             GameObject monsAnother = Instantiate(obstaclePrefab, setPostionSpawn[i + plusPlayerPM], Quaternion.identity);
-            monsAnother.name = obstaclePrefab.name + "_" + i;
+            monsAnother.name = obstaclePrefab.name + "_" + countSpawn;
             MonsterManager.instance.monsList.Add(monsAnother.transform);
             MonsterManager.instance.monsPosition.Add(monsAnother.transform.position);
             Debug.Log("Spwan_New_" + monsAnother.name);
@@ -123,7 +142,10 @@ public class Spawn : MonoBehaviour
                         {
                             RandomXY();
                         }
-                        while (old.Contains(RandomXY()) && old.Contains(PlayerManager.instance.heroPosition[k]) && old.Contains(MonsterManager.instance.monsPosition[j]) && old.Contains(PlayerManager.instance.heroNotInTeam[m].position));
+                        while (old.Contains(RandomXY()) 
+                        && old.Contains(PlayerManager.instance.heroPosition[k])
+                        && old.Contains(MonsterManager.instance.monsPosition[j]) 
+                        && old.Contains(PlayerManager.instance.heroNotInTeam[m].position));
                         old.Add(RandomXY());
                     }
                 }
@@ -131,7 +153,8 @@ public class Spawn : MonoBehaviour
             if (isSpwanPlayer)
             {
                 GameObject playerAnother = Instantiate(prefab, RandomXY(), Quaternion.identity);
-                playerAnother.name = prefab.name + "_" + i;
+                countSpawn++;
+                playerAnother.name = prefab.name + "_" + countSpawn;
                 PlayerManager.instance.heroNotInTeam.Add(playerAnother.transform);
                 Debug.Log("Spwan_New_" + playerAnother.name);
 
@@ -139,7 +162,8 @@ public class Spawn : MonoBehaviour
             else
             {
                 GameObject monsAnother = Instantiate(prefab, RandomXY(), Quaternion.identity);
-                monsAnother.name = prefab.name + "_" + i;
+                countSpawn++;
+                monsAnother.name = prefab.name + "_" + countSpawn;
                 MonsterManager.instance.monsList.Add(monsAnother.transform);
                 MonsterManager.instance.monsPosition.Add(monsAnother.transform.position);
                 Debug.Log("Spwan_New_" + monsAnother.name);
@@ -203,7 +227,7 @@ public class Spawn : MonoBehaviour
 
     //}
 
-   
+
     //IEnumerator WaitToSpawnObstacle(float time, int whichNumberMonsterOrOb, GameObject prefab, bool isSpwanPlayer)
     //{
     //    yield return new WaitForSeconds(time);
@@ -225,7 +249,7 @@ public class Spawn : MonoBehaviour
             t[rand] = temp;
         }
 
-       // Debug.Log("<color=yellow>ShuffleList</color>");
+        // Debug.Log("<color=yellow>ShuffleList</color>");
     }
 
 

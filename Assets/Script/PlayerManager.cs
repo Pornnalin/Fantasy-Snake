@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class PlayerManager : MonoBehaviour
 {
@@ -41,6 +43,12 @@ public class PlayerManager : MonoBehaviour
     }
     private void Update()
     {
+        displayUI.UpdateColor(GameMananger.instance.isGamePadDetect ? Color.white : Color.gray);
+
+        if (heroList.Count<=0)
+        {
+            currentPlayerStage = playerStage.GAMEOVER;
+        }
         switch (currentPlayerStage)
         {
             case playerStage.MOVE:
@@ -54,11 +62,41 @@ public class PlayerManager : MonoBehaviour
                 displayUI.playerBattleUI.SetActive(false);
                 displayUI.oddOrEvenHead.SetActive(false);
                 displayUI.amountKill.text = amountKilled.ToString();
+                InputResetGame();
                 break;
         }
 
     }
+    #region InputResetGame
+    private void InputResetGame()
+    {
+        if (GameMananger.instance.isGamePadDetect)
+        {
+            if (Input.GetKeyDown(KeyCode.Return) || Gamepad.current.rightTrigger.wasPressedThisFrame)
+            {
+                GameMananger.instance.ResetGame(0);
 
+            }
+            else if ((!Input.GetKeyDown(KeyCode.Return) || !Gamepad.current.rightTrigger.wasPressedThisFrame) && Input.anyKey)
+            {
+                Debug.Log("not right input!!!");
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                GameMananger.instance.ResetGame(0);
+
+            }
+            else if (!Input.GetKeyDown(KeyCode.Return) && Input.anyKey)
+            {
+                Debug.Log("not right input!!!");
+            }
+
+        }
+    }
+    #endregion
     public void FlipXAllHero(bool isFlipX)
     {
         for (int i = 0; i < heroPosition.Count; i++)
@@ -206,6 +244,28 @@ public class PlayerManager : MonoBehaviour
     }
     public void RemovePlayerDie()
     {
+        //heroList[0].gameObject.SetActive(false);
+        //List<Vector2> originPos = new List<Vector2>(heroPosition);
+        //originPos.RemoveAt(originPos.Count - 2);
+        //GameObject playerDie = heroList[0].gameObject;       
+        //Debug.Log(playerDie + "___Die");
+        //heroList.RemoveAll(x => x.name == playerDie.name);
+        //heroPosition.RemoveAt(heroList.Count - 2);
+        //heroSprite.RemoveAll(x => x.name == playerDie.name);
+
+        //heroPosition = new List<Vector2>();
+        //foreach (var item in originPos)
+        //{
+        //    heroPosition.Add(item);
+        //}
+
+        //for (int i = 0; i < heroList.Count; i++)
+        //{
+        //    heroList[i].position = new Vector2();
+        //    heroList[i].position = new Vector2(originPos[i].x, originPos[i].y);
+        //    ScriptTurnONOFF(i);
+        //}
+
         List<Vector2> originPos = new List<Vector2>(heroPosition);
         List<Vector2> copy = new List<Vector2>();
         int lastIndex = originPos.Count - 1;
@@ -229,7 +289,8 @@ public class PlayerManager : MonoBehaviour
         move.transform.SetParent(playerDieTran);
         Debug.Log(move.name + "___Die");
         heroList.RemoveAt(0);
-      //  Destroy(heroList[0].gameObject);
+        heroSprite.RemoveAt(0);
+        //  Destroy(heroList[0].gameObject);
 
         for (int i = 0; i < heroList.Count; i++)
         {
@@ -237,5 +298,6 @@ public class PlayerManager : MonoBehaviour
             heroList[i].position = new Vector3(copy[i].x, copy[i].y, 0);
             ScriptTurnONOFF(i);
         }
+
     }
 }
